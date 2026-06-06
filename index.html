@@ -95,7 +95,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
-                </div>
+                </div> 
            <div class="relative" @mouseenter="openMenu = 'about'" @mouseleave="openMenu = null">
                     <button :class="openMenu === 'about' ? 'text-[#834DFB]' : 'text-[#18102B]/60'" class="flex items-center gap-1.5 px-3.5 py-2.5 text-[15px] font-medium cursor-pointer transition-colors duration-150">
                         About
@@ -116,6 +116,10 @@
                         </div>
                     </div>
                 </div>
+
+                <button class="rounded-xl p-[10px_24px] text-sm font-semibold border-1.5 border-[#18102B]/25 text-[#18102B] bg-transparent cursor-pointer transition-all duration-200 hover:border-[#834DFB] hover:text-[#834DFB]">
+                Login
+                </button>
         </nav>
     </div>
 
