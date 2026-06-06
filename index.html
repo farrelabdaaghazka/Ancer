@@ -30,73 +30,80 @@
                     <span class="font-extrabold text-[20px] tracking-[-0.5px]">ANCER</span>
                 </div>
                 
-     <div class="flex items-center gap-1">
-                    <div class="relative" @mouseenter="openMenu = 'features'" @mouseleave="openMenu = null">
-                        <button :class="openMenu === 'features' ? 'text-[#834DFB]' : 'text-[#18102B]/60'" class="flex items-center gap-1.5 px-3.5 py-2.5 text-[15px] font-medium cursor-pointer transition-colors duration-150">
-                            Features
-                            <svg :class="openMenu === 'features' ? 'rotate-180 text-[#834DFB]' : 'rotate-0 text-[#18102B]/40'" class="w-3.5 h-3.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </button>
-                        
-                        <div v-show="openMenu === 'features'" class="absolute top-[calc(100%+14px)] left-1/2 -translate-x-1/2 w-[540px] bg-white rounded-[16px] shadow-[0_16px_56px_rgba(24,16,43,0.16),0_0_0_1px_rgba(131,77,251,0.08)] z-50 overflow-hidden">
-                            
-                            <div class="p-[18px_20px_14px] border-b border-[#18102B]/6">
-                                <div class="text-[#834DFB] text-[10px] font-bold tracking-[1.8px] mb-1">PLATFORM MODULES</div>
-                                <div class="text-[#18102B] text-sm font-semibold">Explore what ANCER offers</div>
-                            </div>
-                        
-                            <div class="p-4 grid grid-cols-2 gap-3" id="features-grid-container">
-                                <div v-for="(item, index) in featureItems" :key="item.title" @mouseenter="hoveredIndex = index" @mouseleave="hoveredIndex = null" class="relative p-4 rounded-xl border cursor-pointer transition-all duration-150 overflow-hidden bg-[#FAFAFA]" :class="hoveredIndex === index ? 'border-[#834DFB] bg-[#834DFB]/4' : 'border-[#18102B]/8'">
-                                    <div class="w-[34px] h-[34px] rounded-[9px] bg-[#834DFB]/10 flex items-center justify-center mb-2.5 text-[#834DFB]">
-                                        <svg v-if="item.title === 'Route Builder'" class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                        <svg v-if="item.title === 'Live Radar'" class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-                                        <svg v-if="item.title === 'Mobility Ledger'" class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                                    </div>
-                                    <div class="text-[#18102B] text-[13px] font-bold mb-1">{{ item.title }}</div>
-                                    <div class="text-[#18102B]/52 text-xs leading-[1.45] mb-2.5">{{ item.desc }}</div>
-                                    <div class="flex items-center gap-1.5">
-                                        <div class="w-1.25 h-1.25 rounded-full bg-[#834DFB]"></div>
-                                        <span class="text-[#834DFB] text-[10px] font-bold">[Requires Login]</span>
-                                    </div>
-                                    <div v-show="hoveredIndex === index" class="absolute inset-0 bg-[#834DFB]/7 rounded-xl flex items-center justify-end pr-3.5 gap-1.5 pointer-events-none">
-                                        <div class="flex items-center gap-1 bg-[#834DFB] text-white rounded-[20px] p-[5px_10px] text-[10px] font-bold shadow-sm">
-                                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                                            <span>Sign in to access</span>
-                                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-                                        </div>
+  <div class="flex items-center gap-1">
+                
+                <div class="relative" @mouseenter="openMenu = 'features'" @mouseleave="openMenu = null">
+                    <button :class="openMenu === 'features' ? 'text-[#834DFB]' : 'text-[#18102B]/60'" class="flex items-center gap-1.5 px-3.5 py-2.5 text-[15px] font-medium cursor-pointer transition-colors duration-150">
+                        Features
+                        <svg :class="openMenu === 'features' ? 'rotate-180 text-[#834DFB]' : 'rotate-0 text-[#18102B]/40'" class="w-3.5 h-3.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    
+                    <div v-show="openMenu === 'features'" class="absolute top-[calc(100%+14px)] left-1/2 -translate-x-1/2 w-[540px] bg-white rounded-[16px] shadow-[0_16px_56px_rgba(24,16,43,0.16),0_0_0_1px_rgba(131,77,251,0.08)] z-50 overflow-hidden">
+                        <div class="p-[18px_20px_14px] border-b border-[#18102B]/6">
+                            <div class="text-[#834DFB] text-[10px] font-bold tracking-[1.8px] mb-1">PLATFORM MODULES</div>
+                            <div class="text-[#18102B] text-sm font-semibold">Explore what ANCER offers</div>
+                        </div>
+                    
+                        <div class="p-4 grid grid-cols-2 gap-3" id="features-grid-container">
+                            <div v-for="(item, index) in featureItems" :key="item.title" @mouseenter="hoveredIndex = index" @mouseleave="hoveredIndex = null" class="relative p-4 rounded-xl border cursor-pointer transition-all duration-150 overflow-hidden bg-[#FAFAFA]" :class="hoveredIndex === index ? 'border-[#834DFB] bg-[#834DFB]/4' : 'border-[#18102B]/8'">
+                                <div class="w-[34px] h-[34px] rounded-[9px] bg-[#834DFB]/10 flex items-center justify-center mb-2.5 text-[#834DFB]">
+                                    <svg v-if="item.title === 'Route Builder'" class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    <svg v-if="item.title === 'Live Radar'" class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                                    <svg v-if="item.title === 'Mobility Ledger'" class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                                </div>
+                                <div class="text-[#18102B] text-[13px] font-bold mb-1">{{ item.title }}</div>
+                                <div class="text-[#18102B]/52 text-xs leading-[1.45] mb-2.5">{{ item.desc }}</div>
+                                <div class="flex items-center gap-1.5">
+                                    <div class="w-1.25 h-1.25 rounded-full bg-[#834DFB]"></div>
+                                    <span class="text-[#834DFB] text-[10px] font-bold">[Requires Login]</span>
+                                </div>
+                                <div v-show="hoveredIndex === index" class="absolute inset-0 bg-[#834DFB]/7 rounded-xl flex items-center justify-end pr-3.5 gap-1.5 pointer-events-none">
+                                    <div class="flex items-center gap-1 bg-[#834DFB] text-white rounded-[20px] p-[5px_10px] text-[10px] font-bold shadow-sm">
+                                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                        <span>Sign in to access</span>
+                                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="p-4 rounded-xl border border-dashed border-[#834DFB]/28 bg-[#834DFB]/4 flex flex-col items-center justify-center text-center gap-1.5 hover:bg-[#834DFB]/8 transition-colors duration-150 cursor-pointer">
-                                    <div class="w-[34px] h-[34px] rounded-[9px] bg-[#834DFB] flex items-center justify-center text-white">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                                    </div>
-                                    <div class="text-[#834DFB] text-xs font-bold">Full Platform Access</div>
-                                    <div class="text-[#18102B]/42 text-[11px] leading-square">Authenticate to unlock all live modules</div>
+                            <div class="p-4 rounded-xl border border-dashed border-[#834DFB]/28 bg-[#834DFB]/4 flex flex-col items-center justify-center text-center gap-1.5 hover:bg-[#834DFB]/8 transition-colors duration-150 cursor-pointer">
+                                <div class="w-[34px] h-[34px] rounded-[9px] bg-[#834DFB] flex items-center justify-center text-white">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                                 </div>
+                                <div class="text-[#834DFB] text-xs font-bold">Full Platform Access</div>
+                                <div class="text-[#18102B]/42 text-[11px] leading-square">Authenticate to unlock all live modules</div>
                             </div>
-                            
-                            <div class="p-[12px_20px] border-t border-[#18102B]/6 flex items-center justify-between">
-                                <span class="text-[#18102B]/40 text-xs">Secure authentication required for all modules</span>
-                                <button class="flex items-center gap-1.5 bg-[#834DFB] text-white rounded-lg p-[8px_14px] text-xs font-bold border-none cursor-pointer">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                                    Authenticate
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-                                </button>
-                            </div>
-
+                        </div>
+                        
+                        <div class="p-[12px_20px] border-t border-[#18102B]/6 flex items-center justify-between">
+                            <span class="text-[#18102B]/40 text-xs">Secure authentication required for all modules</span>
+                            <button class="flex items-center gap-1.5 bg-[#834DFB] text-white rounded-lg p-[8px_14px] text-xs font-bold border-none cursor-pointer">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                Authenticate
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                            </button>
                         </div>
                     </div>
                 </div>
-                            
+
+                <div class="relative" @mouseenter="openMenu = 'analytics'" @mouseleave="openMenu = null">
+                    <button :class="openMenu === 'analytics' ? 'text-[#834DFB]' : 'text-[#18102B]/60'" class="flex items-center gap-1.5 px-3.5 py-2.5 text-[15px] font-medium rounded-auto cursor-pointer transition-colors duration-150">
+                        Analytics
+                        <svg :class="openMenu === 'analytics' ? 'rotate-180 text-[#834DFB]' : 'rotate-0 text-[#18102B]/40'" class="w-3.5 h-3.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
                 </div>
+
+            </div>
 
             </div>
         </nav>
     </div>
 
-    <script>
+   <script>
         const { createApp, ref } = Vue;
 
         createApp({
@@ -110,11 +117,16 @@
                     { title: "Mobility Ledger", desc: "Automated transit expense vault" }
                 ]);
 
+                const networks = ref(["MRT Jakarta", "KRL Commuter Line", "TransJakarta", "JakLingko"]);
+
+            
                 return {
                     openMenu,
                     hoveredIndex,
-                    featureItems 
-            }
+                    featureItems,
+                    networks
+                }
+            } 
         }).mount('#app'); 
     </script>
 </body>
