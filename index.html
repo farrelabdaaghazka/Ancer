@@ -21,22 +21,28 @@
 
                 <div class="flex items-center gap-3">
                     <div class="flex items-center justify-center rounded-xl w-9 h-9 bg-[#834DFB]">
-                       <div class="flex items-center justify-center rounded-xl w-9 h-9 bg-[#834DFB]">
-   <div class="flex items-center justify-center rounded-xl w-9 h-9 bg-[#834DFB]">
-    <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="6" cy="19" r="3"/>
-        <circle cx="18" cy="5" r="3"/>
-        <path d="M9 19h4.5a3.5 3.5 0 0 0 3.5-3.5V8.5a3.5 3.5 0 0 1 3.5-3.5H15"/>
-    </svg>
-</div>
-</div>
+                        <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="6" cy="19" r="3"/>
+                            <circle cx="18" cy="5" r="3"/>
+                            <path d="M9 19h4.5a3.5 3.5 0 0 0 3.5-3.5V8.5a3.5 3.5 0 0 1 3.5-3.5H15"/>
+                        </svg>
                     </div>
                     <span class="font-extrabold text-[20px] tracking-[-0.5px]">ANCER</span>
                 </div>
                 
+                <div class="flex items-center gap-1">
+                    <div class="relative" @mouseenter="openMenu = 'features'" @mouseleave="openMenu = null">
+                        <button :class="openMenu === 'features' ? 'text-[#834DFB]' : 'text-[#18102B]/60'" class="flex items-center gap-1.5 px-3.5 py-2.5 text-[15px] font-medium rounded-auto cursor-pointer transition-colors duration-150">
+                            Features
+                            <svg :class="openMenu === 'features' ? 'rotate-180 text-[#834DFB]' : 'rotate-0 text-[#18102B]/40'" class="w-3.5 h-3.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                </div>
+
             </div>
         </nav>
-        </div>
+    </div>
 
     <script>
         const { createApp, ref } = Vue;
