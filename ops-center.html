@@ -136,96 +136,114 @@
         </div>
     </aside>
 
-    <main class="flex-1 p-10 lg:p-14 w-full">
+    <main class="flex-1 p-8 md:p-12 w-full">
         
-        <header class="mb-12">
-            <h2 class="text-purple-600 font-bold text-sm tracking-[0.2em] uppercase mb-2">ANCER OPS CENTER</h2>
-            <h1 class="text-4xl font-extrabold mb-3 tracking-tight">Command Dashboard</h1>
-            <p class="text-gray-400 text-base">Monday, 01 June 2026</p>
+        <header class="mb-10">
+            <h2 class="text-purple-600 font-bold text-xs tracking-[0.2em] uppercase mb-1">ANCER OPS CENTER</h2>
+            <h1 class="text-3xl font-bold mb-2">Command Dashboard</h1>
+            <p class="text-gray-400 text-sm">Monday, 01 June 2026</p>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-            <div class="bg-surface border border-border rounded-2xl p-8 shadow-sm">
-                <p class="text-gray-400 text-sm mb-5">Total Commuter Spending This Month</p>
-                <h3 class="text-[40px] font-extrabold text-purple-400 mb-3 leading-none tracking-tight">Rp412.000</h3>
-                <p class="text-sm text-red-400 flex items-center gap-1.5 font-medium">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-surface border border-border rounded-2xl p-6 shadow-sm">
+                <p class="text-gray-400 text-sm mb-4">Total Commuter Spending This Month</p>
+                <h3 class="text-3xl font-bold text-purple-400 mb-2">Rp412.000</h3>
+                <p class="text-xs text-red-400 flex items-center gap-1">
                     <span>▲</span> 12% vs last month
                 </p>
             </div>
             
-            <div class="bg-surface border border-border rounded-2xl p-8 shadow-sm">
-                <p class="text-gray-400 text-sm mb-5">Remaining Travel Budget</p>
-                <h3 class="text-[40px] font-extrabold text-yellowAcc mb-3 leading-none tracking-tight">Rp1.178.000</h3>
-                <p class="text-sm text-gray-500 font-medium">74% of monthly budget</p>
+            <div class="bg-surface border border-border rounded-2xl p-6 shadow-sm">
+                <p class="text-gray-400 text-sm mb-4">Remaining Travel Budget</p>
+                <h3 class="text-3xl font-bold text-yellowAcc mb-2">Rp1.178.000</h3>
+                <p class="text-xs text-gray-500">74% of monthly budget</p>
             </div>
 
-            <div class="bg-surface border border-border rounded-2xl p-8 shadow-sm">
-                <p class="text-gray-400 text-sm mb-5">Capital Saved via Integration</p>
-                <h3 class="text-[40px] font-extrabold text-greenAcc mb-3 leading-none tracking-tight">Rp45.500</h3>
-                <p class="text-sm text-greenAcc flex items-center gap-1.5 font-medium">
+            <div class="bg-surface border border-border rounded-2xl p-6 shadow-sm">
+                <p class="text-gray-400 text-sm mb-4">Capital Saved via Integration</p>
+                <h3 class="text-3xl font-bold text-greenAcc mb-2">Rp45.500</h3>
+                <p class="text-xs text-greenAcc flex items-center gap-1">
                     <span>↑</span> Smart routing savings
                 </p>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             
-            <div class="lg:col-span-2 bg-surface border border-border rounded-2xl p-8 flex flex-col shadow-sm h-full">
-                <div class="flex justify-between items-center mb-8">
-                    <h3 class="font-bold text-xl">Recent Trips</h3>
-                    <a href="#" class="text-sm font-medium text-purple-400 hover:text-purple-300">View all →</a>
+            <div class="lg:col-span-2 bg-surface border border-border rounded-2xl p-6 flex flex-col shadow-sm h-full">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-lg">Recent Trips</h3>
+                    <a href="#" class="text-sm text-purple-400 hover:text-purple-300">View all →</a>
                 </div>
                 
-                <div class="flex flex-col gap-8">
+                <div class="flex flex-col gap-6">
                     <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-5">
-                            <div class="w-10 h-10 rounded-lg bg-base border border-border flex items-center justify-center text-2xl shrink-0">🚇</div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-8 h-8 rounded bg-base border border-border flex items-center justify-center text-xl shrink-0">🚇</div>
                             <div>
-                                <h4 class="font-semibold text-base text-white">Gambir → Lebak Bulus</h4>
-                                <p class="text-sm text-gray-400 mt-1">MRT · Today 08:32</p>
+                                <h4 class="font-semibold text-sm">Gambir → Lebak Bulus</h4>
+                                <p class="text-xs text-gray-500 mt-1">MRT · Today 08:32</p>
                             </div>
                         </div>
-                        <span class="font-bold text-lg">Rp14.000</span>
+                        <span class="font-bold">Rp14.000</span>
                     </div>
                     <hr class="border-border">
                     
                     <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-5">
-                            <div class="w-10 h-10 rounded-lg bg-base border border-border flex items-center justify-center text-2xl shrink-0">🚌</div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-8 h-8 rounded bg-base border border-border flex items-center justify-center text-xl shrink-0">🚌</div>
                             <div>
-                                <h4 class="font-semibold text-base text-white">Lebak Bulus → Harmoni</h4>
-                                <p class="text-sm text-gray-400 mt-1">TransJakarta · Today 07:15</p>
+                                <h4 class="font-semibold text-sm">Lebak Bulus → Harmoni</h4>
+                                <p class="text-xs text-gray-500 mt-1">TransJakarta · Today 07:15</p>
                             </div>
                         </div>
-                        <span class="font-bold text-lg">Rp3.500</span>
+                        <span class="font-bold">Rp3.500</span>
                     </div>
                     <hr class="border-border">
                     
                     <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-5">
-                            <div class="w-10 h-10 rounded-lg bg-base border border-border flex items-center justify-center text-2xl shrink-0">🚆</div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-8 h-8 rounded bg-base border border-border flex items-center justify-center text-xl shrink-0">🚆</div>
                             <div>
-                                <h4 class="font-semibold text-base text-white">Manggarai → Bogor</h4>
-                                <p class="text-sm text-gray-400 mt-1">KRL · Sat 07:42</p>
+                                <h4 class="font-semibold text-sm">Manggarai → Bogor</h4>
+                                <p class="text-xs text-gray-500 mt-1">KRL · Sat 07:42</p>
                             </div>
                         </div>
-                        <span class="font-bold text-lg">Rp7.000</span>
+                        <span class="font-bold">Rp7.000</span>
                     </div>
                 </div>
             </div>
 
-            <div class="flex flex-col gap-8 h-full">
-                <div class="bg-surface border border-border rounded-2xl p-8 flex-1 flex flex-col justify-center cursor-pointer hover:border-purple-500/50 transition shadow-sm">
-                    <p class="text-sm font-bold text-purple-400 tracking-wider mb-3 uppercase">Route Planner →</p>
-                    <h3 class="font-bold text-2xl mb-2 tracking-tight">Plan your next commute</h3>
-                    <p class="text-base text-gray-500">Multi-modal optimization with live fare data</p>
+            <div class="flex flex-col gap-6 h-full">
+                <div class="bg-surface border border-border rounded-2xl p-6 flex-1 flex flex-col justify-center cursor-pointer hover:border-purple-500/50 transition shadow-sm">
+                    <p class="text-xs font-bold text-purple-400 tracking-wider mb-2 uppercase">Route Planner →</p>
+                    <h3 class="font-bold text-xl mb-1">Plan your next commute</h3>
+                    <p class="text-sm text-gray-500">Multi-modal optimization with live fare data</p>
                 </div>
                 
-                <div class="bg-surface border border-border rounded-2xl p-8 flex-1 flex flex-col justify-center cursor-pointer hover:border-yellow-500/50 transition shadow-sm">
-                    <p class="text-sm font-bold text-yellowAcc tracking-wider mb-3 uppercase">Live Radar →</p>
-                    <h3 class="font-bold text-2xl mb-2 tracking-tight">Active transit map</h3>
-                    <p class="text-base text-gray-500">Real-time delay tracking and navigation</p>
+                <div class="bg-surface border border-border rounded-2xl p-6 flex-1 flex flex-col justify-center cursor-pointer hover:border-yellow-500/50 transition shadow-sm">
+                    <p class="text-xs font-bold text-yellowAcc tracking-wider mb-2 uppercase">Live Radar →</p>
+                    <h3 class="font-bold text-xl mb-1">Active transit map</h3>
+                    <p class="text-sm text-gray-500">Real-time delay tracking and navigation</p>
                 </div>
             </div>
+        </div>
+
+        <div class="bg-[#1a1625] border border-yellow-600/30 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+            <div class="flex items-center gap-3">
+                <svg class="w-6 h-6 text-yellowAcc shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <p class="text-sm text-gray-300">
+                    <span class="font-bold text-yellowAcc">Severe Delay Alert:</span> 
+                    Red Line backlog due to extreme weather at Tanah Abang. Estimated delay: 22 minutes.
+                </p>
+            </div>
+            <button class="bg-yellowAcc hover:bg-yellow-400 text-black font-semibold text-sm px-6 py-2.5 rounded-lg whitespace-nowrap transition">
+                Open Live Radar
+            </button>
+        </div>
+
+    </main>
 </body>
 </html>
