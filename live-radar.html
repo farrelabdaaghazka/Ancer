@@ -6,6 +6,10 @@
     <title>Ancer Ops Center - Live Radar</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -23,8 +27,15 @@
             }
         }
     </script>
+    <style>
+        /* Dark Mode filter untuk OpenStreetMap agar menyatu dengan UI ANCER */
+        .ancer-tile { filter: invert(1) hue-rotate(210deg) brightness(0.72) saturate(0.5) contrast(1.12); }
+        .leaflet-container { background: #090714 !important; }
+        .leaflet-control-attribution, .leaflet-control-zoom { display: none !important; }
+    </style>
 </head>
 <body class="bg-base text-white font-sans flex min-h-screen overflow-hidden">
+
     <aside class="w-20 h-screen sticky top-0 border-r border-border flex flex-col items-center py-6 shrink-0 bg-surface z-50">
         <div class="w-10 h-10 bg-[#834DFB] rounded-xl flex items-center justify-center cursor-pointer hover:bg-purple-500 transition">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
@@ -50,8 +61,35 @@
                 <button id="toggle-nav-btn" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-400">Active Navigation</button>
             </div>
         </div>
-        <div id="display-container" class="flex-1 border border-[#251f4f] rounded-3xl overflow-hidden relative min-h-[480px]">
+
+        <div id="display-container" class="flex-1 border border-[#251f4f] rounded-3xl overflow-hidden relative shadow-2xl min-h-[480px]">
+            
+            <div id="map-view-layer" class="absolute inset-0 z-10 flex flex-col justify-between">
+                <div id="leaflet-map-mount" class="absolute inset-0 z-0"></div>
+                
+                <div class="absolute top-5 left-1/2 -translate-x-1/2 w-[480px] z-[1000]">
+                    <div class="flex items-center gap-3 bg-[#0c071ae6] border border-[#341F60] rounded-xl p-4 backdrop-blur-xl shadow-xl">
+                        <input id="search-station-input" type="text" placeholder="Search MRT Jakarta stations…" class="flex-1 bg-transparent border-none text-sm text-[#F5F3FF] outline-none">
+                    </div>
+                </div>
+
+                <div class="absolute bottom-5 left-5 bg-[#120e2b99] border border-[#251f4f] rounded-xl p-4 backdrop-blur-xl z-[1000] space-y-2">
+                    <div class="text-[10px] font-bold text-gray-400 tracking-wider mb-2">TRANSIT LINES</div>
+                    <div id="legend-mrt" class="flex items-center gap-2"><div class="w-4 h-[3px] bg-[#834DFB] rounded shadow-[0_0_6px_#834DFB]"></div><span class="text-xs text-gray-300">MRT Jakarta</span></div>
+                    <div id="legend-tj" class="flex items-center gap-2 opacity-40"><div class="w-4 h-[3px] bg-[#F0E100] rounded"></div><span class="text-xs text-gray-400">TransJakarta</span></div>
+                    <div id="legend-krl" class="flex items-center gap-2 opacity-40"><div class="w-4 h-[3px] bg-[#22c55e] rounded"></div><span class="text-xs text-gray-400">KRL Commuter</span></div>
+                </div>
+
+                <div class="absolute bottom-5 left-1/2 -translate-x-1/2 bg-[#0c071ae6] border border-[#251f4f] rounded-xl p-2 backdrop-blur-xl z-[1000] flex gap-1.5">
+                    <button id="chip-MRT" class="px-3.5 py-2 rounded-lg text-xs font-bold border border-[#834DFB] bg-[#834DFB]1a text-[#834DFB]">MRT Jakarta</button>
+                    <button id="chip-TJ" class="px-3.5 py-2 rounded-lg text-xs font-bold text-gray-500">TransJakarta</button>
+                    <button id="chip-KRL" class="px-3.5 py-2 rounded-lg text-xs font-bold text-gray-500">KRL Commuter</button>
+                </div>
+
+                <button id="start-nav-btn" class="absolute bottom-5 right-5 bg-[#834DFB] text-white px-5 py-3 rounded-xl text-sm font-bold z-[1000]">Start Navigation</button>
             </div>
+
+        </div>
     </main>
 </body>
 </html>
