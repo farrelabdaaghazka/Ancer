@@ -150,9 +150,10 @@
                 </h1>
             </div>
 
-            <button class="bg-yellowAcc text-black px-6 py-4 rounded-2xl font-bold shadow-lg hover:scale-105 transition">
+            <button onclick="toggleTripModal(true)" class="bg-yellowAcc text-black px-6 py-4 rounded-2xl font-bold shadow-lg hover:scale-105 transition">
                 + Log Trip
             </button>
+    
         </div>
 
         <!-- STATS -->
@@ -404,5 +405,86 @@
             </div>
         </div>
     </main>
+  
+    <div id="trip-modal" class="hidden fixed inset-0 bg-[#070412]/85 backdrop-blur-md z-[9999] flex items-center justify-center p-4 overflow-y-auto">
+        
+        <div class="bg-[#120d24] border-2 border-[#4c249f]/60 shadow-[0_0_50px_rgba(139,92,246,0.2)] w-full max-w-[520px] rounded-[32px] p-7 md:p-9 relative my-auto animate-fade-in">
+            
+            <!-- Tombol Close Kotak dengan Sudut Tumpul Halus -->
+            <button onclick="toggleTripModal(false)" class="absolute top-7 right-7 w-9 h-9 flex items-center justify-center rounded-xl bg-white/[0.04] border border-white/[0.08] text-gray-400 hover:text-white hover:bg-white/[0.08] transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+
+            <!-- Header: Icon & Text -->
+            <div class="text-center mt-2">
+                <div class="text-5xl mb-5">🚀</div>
+                <h2 class="text-[32px] font-extrabold text-white tracking-tight leading-none">Trip Completed!</h2>
+                <p class="text-[#7e7694] text-[14px] mt-3 font-medium">Confirm your transit expense to log it to the ledger</p>
+            </div>
+
+            <!-- Box Total Fare (Lebih lebar dan melengkung sempurna) -->
+            <div class="bg-[#1b1437] border border-[#2e225c] rounded-[24px] py-7 px-6 my-7 text-center">
+                <p class="text-[11px] uppercase tracking-[2px] font-bold text-[#8b7cb6]">Total Fare Calculated</p>
+                <p class="text-[56px] font-black text-white mt-2 tracking-tight leading-none">Rp9.000</p>
+            </div>
+
+            <!-- Bagian Breakdown Biaya -->
+            <div class="space-y-4 px-1">
+                <h4 class="text-[11px] uppercase tracking-[1.5px] font-bold text-[#564f6e] mb-2">Fare Breakdown</h4>
+                
+                <div class="flex justify-between items-center text-[15px]">
+                    <span class="text-[#a299bd]">MRT Jakarta <span class="text-[#564f6e] text-[13px] font-normal">(Blok M → Bundaran HI)</span></span>
+                    <span class="font-bold text-white">Rp14.000</span>
+                </div>
+                
+                <div class="flex justify-between items-center text-[15px]">
+                    <span class="text-[#a299bd]">TransJakarta C1 <span class="text-[#564f6e] text-[13px] font-normal">(Blok M terminal)</span></span>
+                    <span class="font-bold text-white">Rp3.500</span>
+                </div>
+                
+                <div class="flex justify-between items-center text-[15px]">
+                    <span class="text-[#10b981]">KRL Integration Discount</span>
+                    <span class="font-bold text-[#10b981]">-Rp5.000</span>
+                </div>
+                
+                <div class="flex justify-between items-center text-[15px]">
+                    <span class="text-[#10b981]">Multi-modal Fare Cap Savings</span>
+                    <span class="font-bold text-[#10b981]">-Rp3.500</span>
+                </div>
+
+                <!-- Garis Pembatas Horisontal -->
+                <div class="border-t border-white/[0.08] my-6 pt-5 flex justify-between items-center">
+                    <span class="text-[16px] font-bold text-white">Net Total</span>
+                    <span class="text-[22px] font-black text-[#facc15] tracking-wide">Rp9.000</span>
+                </div>
+            </div>
+
+            <!-- Tombol Kontrol Bawah (Grid Proporsional) -->
+            <div class="grid grid-cols-2 gap-4 mt-8">
+                <!-- Edit Expense -->
+                <button onclick="toggleTripModal(false)" class="border-2 border-[#2e225c] hover:bg-white/[0.02] text-[#a299bd] py-4 rounded-[16px] font-bold text-[14px] transition">
+                    Edit Expense
+                </button>
+                
+                <!-- Confirm Log -->
+                <button onclick="toggleTripModal(false)" class="bg-[#facc15] hover:bg-[#eab308] text-black py-4 rounded-[16px] font-black text-[14px] shadow-[0_4px_20px_rgba(250,204,21,0.2)] transition flex items-center justify-center gap-1">
+                    Confirm Log ✓
+                </button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function toggleTripModal(show) {
+            const modal = document.getElementById('trip-modal');
+            if (show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+    </script>
+
 </body>
 </html>
