@@ -38,7 +38,6 @@
             100% { transform: scale(1);   opacity: 0; }
         }
         .pulse-layer { animation: ancerPulse 1.8s ease-out infinite; }
-        
         .node-transition { transition: all 0.4s linear; }
     </style>
 </head>
@@ -89,9 +88,9 @@
                 </div>
 
                 <div class="absolute bottom-5 left-1/2 -translate-x-1/2 bg-[#0c071ae6] border border-[#251f4f] rounded-xl p-2 backdrop-blur-xl z-[1000] flex gap-1.5">
-                    <button id="chip-MRT" class="px-3.5 py-2 rounded-lg text-xs font-bold border border-[#834DFB] bg-[#834DFB]1a text-[#834DFB]">MRT Jakarta</button>
-                    <button id="chip-TJ" class="px-3.5 py-2 rounded-lg text-xs font-bold text-gray-500">TransJakarta</button>
-                    <button id="chip-KRL" class="px-3.5 py-2 rounded-lg text-xs font-bold text-gray-500">KRL Commuter</button>
+                    <button onclick="switchScenario('MRT')" id="chip-MRT" class="px-3.5 py-2 rounded-lg text-xs font-bold border border-[#834DFB] bg-[#834DFB]1a text-[#834DFB]">MRT Jakarta</button>
+                    <button onclick="switchScenario('TJ')" id="chip-TJ" class="px-3.5 py-2 rounded-lg text-xs font-bold text-gray-500">TransJakarta</button>
+                    <button onclick="switchScenario('KRL')" id="chip-KRL" class="px-3.5 py-2 rounded-lg text-xs font-bold text-gray-500">KRL Commuter</button>
                 </div>
 
                 <button id="start-nav-btn" class="absolute bottom-5 right-5 bg-[#834DFB] text-white px-5 py-3 rounded-xl text-sm font-bold z-[1000]">Start Navigation</button>
@@ -148,5 +147,332 @@
 
         </div>
     </main>
-</body>
+
+    <script>
+        const ROUTING_SCHEMA = {
+            MRT: {
+                transitType: "MRT Jakarta", lineColor: "#834DFB",
+                lineName: "MRT SOUTH-NORTH LINE · ACTIVE NAVIGATION", fareValue: "Rp14.000",
+                activeStationName: "Blok M Transit", nextStation: "Sisingamangaraja", destination: "Bundaran HI",
+                etaNext: "3 min", etaDest: "24 min", remainingStops: "4 stations",
+                delayMessage: "Severe Delay: Red Line backlog due to extreme weather.",
+                onScheduleLabel: "ON SCHEDULE", onScheduleColor: "#22c55e",
+                mapCenter: [-6.2446, 106.8006], mapZoom: 16,
+                stations: ["Lebak Bulus", "Fatmawati", "Cipete Raya", "Haji Nawi", "Blok A", "Blok M", "Sisingamangaraja", "Senayan", "ISTN", "Bundaran HI"],
+                activeIndex: 5, linePath: [[-6.2894, 106.7742], [-6.2803, 106.7944], [-6.2550, 106.7998], [-6.2446, 106.8006], [-6.2365, 106.8015], [-6.2277, 106.8024], [-6.1950, 106.8231]],
+                stopsCoords: [[-6.2894, 106.7742], [-6.2803, 106.7944], [-6.2550, 106.7998], [-6.2446, 106.8006], [-6.2365, 106.8015], [-6.2277, 106.8024], [-6.1950, 106.8231]]
+            },
+            TJ: {
+                transitType: "TransJakarta", lineColor: "#F0E100",
+                lineName: "CORRIDOR 1 · BLOK M → KOTA", fareValue: "Rp3.500",
+                activeStationName: "Halte Blok M", nextStation: "Gelora Bung Karno", destination: "Polda Metro Jaya",
+                etaNext: "4 min", etaDest: "18 min", remainingStops: "4 halte",
+                delayMessage: "Notice: Corridor 1 — 8-min delay at GBK turnover gate.",
+                onScheduleLabel: "8 MIN DELAY", onScheduleColor: "#F0E100",
+                mapCenter: [-6.2300, 106.8100], mapZoom: 15,
+                stations: ["Halte Blok M", "Gelora Bung Karno", "Senayan", "Bendungan Hilir", "Polda Metro Jaya"],
+                activeIndex: 0, linePath: [[-6.2446, 106.7994], [-6.2300, 106.8050], [-6.2180, 106.8018], [-6.2089, 106.8261]],
+                stopsCoords: [[-6.2446, 106.7994], [-6.2180, 106.8018], [-6.2089, 106.8261]]
+            },
+            KRL: {
+                transitType: "KRL Commuter", lineColor: "#22c55e",
+                lineName: "BOGOR LINE · MANGGARAI → KP. BANDAN", fareValue: "Rp5.000",
+                activeStationName: "Sudirman Station", nextStation: "Karet", destination: "Kampung Bandan",
+                etaNext: "2 min", etaDest: "14 min", remainingStops: "3 stations",
+                delayMessage: "Advisory: KRL Bogor Line — signal check at Manggarai.",
+                onScheduleLabel: "ON TRACK", onScheduleColor: "#22c55e",
+                mapCenter: [-6.2013, 106.8230], mapZoom: 15,
+                stations: ["Manggarai", "Cikini", "Gondangdia", "Sudirman", "Karet", "Tanah Abang", "Kampung Bandan"],
+                activeIndex: 3, linePath: [[-6.2148, 106.8506], [-6.2080, 106.8380], [-6.2013, 106.8230], [-6.1960, 106.8120], [-6.1394, 106.8091]],
+                stopsCoords: [[-6.2148, 106.8506], [-6.2013, 106.8230], [-6.1877, 106.8055], [-6.1394, 106.8091]]
+            }
+        };
+
+        let activeScenario = "MRT";
+        let currentRadarState = "search";
+        let simulatedIndex = 0;
+        let showBanner = true;
+        let rerouteApplied = false;
+        let trackingInterval = null;
+        let bannerTextOverride = null;
+
+        let map = null;
+        let markerGroup = null;
+        let polylines = { mrt: null, tj: null, krl: null };
+
+        function initLeafletMap() {
+            map = L.map('leaflet-map-mount', {
+                center: [-6.2446, 106.8006],
+                zoom: 14,
+                zoomControl: false,
+                attributionControl: false
+            });
+
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                maxZoom: 19,
+                className: "ancer-tile"
+            }).addTo(map);
+
+            markerGroup = L.layerGroup().addTo(map);
+            renderMapLayers();
+        }
+
+        function renderMapLayers() {
+            if (!map) return;
+            markerGroup.clearLayers();
+
+            if(polylines.mrt) map.removeLayer(polylines.mrt);
+            if(polylines.tj) map.removeLayer(polylines.tj);
+            if(polylines.krl) map.removeLayer(polylines.krl);
+
+            polylines.mrt = L.polyline(ROUTING_SCHEMA.MRT.linePath, { color: "#834DFB", weight: 3.5, opacity: activeScenario === "MRT" ? 0.9 : 0.15 }).addTo(map);
+            polylines.tj = L.polyline(ROUTING_SCHEMA.TJ.linePath, { color: "#F0E100", weight: 3.5, opacity: activeScenario === "TJ" ? 0.9 : 0.15 }).addTo(map);
+            polylines.krl = L.polyline(ROUTING_SCHEMA.KRL.linePath, { color: "#22c55e", weight: 3.5, opacity: activeScenario === "KRL" ? 0.9 : 0.15 }).addTo(map);
+
+            const schema = ROUTING_SCHEMA[activeScenario];
+            schema.stopsCoords.forEach((coords, i) => {
+                if (i === (activeScenario === "MRT" ? 3 : activeScenario === "KRL" ? 2 : 0)) {
+                    L.marker(coords, {
+                        icon: L.divIcon({
+                            className: "",
+                            html: `<div style="position:relative;width:20px;height:20px">
+                                     <div class="pulse-layer" style="position:absolute;inset:-12px;border-radius:50%;background:${schema.lineColor}1a"></div>
+                                     <div class="pulse-layer" style="position:absolute;inset:-5px;border-radius:50%;background:${schema.lineColor}38;"></div>
+                                     <div style="width:20px;height:20px;border-radius:50%;background:${schema.lineColor};box-shadow:0 0 16px ${schema.lineColor}"></div>
+                                   </div>`,
+                            iconSize: [20, 20], iconAnchor: [10, 10]
+                        })
+                    }).addTo(markerGroup);
+                } else {
+                    L.circleMarker(coords, { radius: 5, color: schema.lineColor, fillColor: "#090714", fillOpacity: 0.9, weight: 2 }).addTo(markerGroup);
+                }
+            });
+        }
+
+        function switchScenario(target) {
+            activeScenario = target;
+            
+            Object.keys(ROUTING_SCHEMA).forEach(key => {
+                const btn = document.getElementById(`chip-${key}`);
+                const dot = btn.querySelector('div');
+                if(key === target) {
+                    btn.className = `flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all border text-[${ROUTING_SCHEMA[key].lineColor}]`;
+                    btn.style.borderColor = ROUTING_SCHEMA[key].lineColor;
+                    btn.style.color = ROUTING_SCHEMA[key].lineColor;
+                    btn.style.background = `${ROUTING_SCHEMA[key].lineColor}1a`;
+                    dot.style.opacity = "1";
+                } else {
+                    btn.className = "flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all border border-transparent text-gray-500";
+                    btn.style.borderColor = "transparent";
+                    btn.style.color = "";
+                    btn.style.background = "";
+                    dot.style.opacity = "0.4";
+                }
+            });
+
+            ["mrt", "tj", "krl"].forEach(mode => {
+                const legendEl = document.getElementById(`legend-${mode}`);
+                if(mode === target.toLowerCase()) {
+                    legendEl.classList.remove('opacity-40');
+                    legendEl.querySelector('span').className = "text-xs font-semibold text-gray-300";
+                } else {
+                    legendEl.classList.add('opacity-40');
+                    legendEl.querySelector('span').className = "text-xs text-gray-400";
+                }
+            });
+
+            document.getElementById('search-station-input').placeholder = `Search ${ROUTING_SCHEMA[target].transitType} stations…`;
+            renderMapLayers();
+            
+            const data = ROUTING_SCHEMA[target];
+            map.flyTo(data.mapCenter, data.mapZoom, { animate: true, duration: 1.0 });
+        }
+
+        function syncActiveNavigationDOM() {
+            const data = ROUTING_SCHEMA[activeScenario];
+            const color = data.lineColor;
+
+            document.getElementById('track-line-name').innerText = data.lineName;
+            document.getElementById('track-line-name').style.color = `${color}aa`;
+            document.getElementById('cp-header-label').style.color = color;
+            document.getElementById('cp-active-title').innerText = `Active ${data.transitType === "TransJakarta" ? "Halte" : "Station"}`;
+            document.getElementById('cp-next-title').innerText = `Next ${data.transitType === "TransJakarta" ? "Halte" : "Station"}`;
+            document.getElementById('cp-fare').innerText = data.fareValue;
+
+            const activeStationName = data.stations[simulatedIndex];
+            document.getElementById('cp-active-name').innerText = activeStationName;
+
+            const isAtTerminus = simulatedIndex >= data.stations.length - 1;
+            const remainingCount = (data.stations.length - 1) - simulatedIndex;
+
+            document.getElementById('cp-next-name').innerText = isAtTerminus ? "—" : data.stations[simulatedIndex + 1];
+            document.getElementById('cp-next-eta').innerText = isAtTerminus ? "" : data.etaNext;
+            document.getElementById('cp-next-eta').style.color = color;
+
+            const baseMinutes = parseInt(data.etaDest) || 20;
+            const stepDelta = simulatedIndex - data.activeIndex;
+            const maxSteps = Math.max(1, (data.stations.length - 1) - data.activeIndex);
+            document.getElementById('cp-dest-eta').innerText = isAtTerminus ? "Arrived" : `${Math.max(1, Math.round(baseMinutes * (1 - stepDelta / maxSteps)))} min`;
+            document.getElementById('cp-dest-eta').style.color = color;
+            document.getElementById('cp-dest-name').innerText = data.destination;
+
+            document.getElementById('cp-remaining-val').innerText = isAtTerminus ? "Destination Reached" : `${remainingCount} ${data.transitType === "TransJakarta" ? "halte" : "station"}${remainingCount > 1 ? 's' : ''}`;
+
+            const currentBadgeLabel = (rerouteApplied || isAtTerminus) ? "ON TRACK" : data.onScheduleLabel;
+            const currentBadgeColor = (rerouteApplied || isAtTerminus) ? "#22c55e" : data.onScheduleColor;
+            
+            const badge = document.getElementById('cp-badge');
+            badge.innerText = currentBadgeLabel;
+            badge.style.color = currentBadgeColor;
+            badge.style.borderColor = `${currentBadgeColor}50`;
+            badge.style.background = `${currentBadgeColor}15`;
+
+            document.getElementById('banner-text').innerText = bannerTextOverride ?? data.delayMessage;
+            const rerouteBtn = document.getElementById('reroute-btn');
+            if(rerouteApplied) {
+                rerouteBtn.classList.add('hidden');
+            } else {
+                rerouteBtn.classList.remove('hidden');
+            }
+
+            const container = document.getElementById('timeline-node-container');
+            container.innerHTML = "";
+
+            const progressFraction = simulatedIndex / (data.stations.length - 1);
+            
+            const baseRail = document.createElement('div');
+            baseRail.className = "absolute h-[2px] inset-x-0 top-1/2 -translate-y-1/2 bg-white/10 z-0";
+            container.appendChild(baseRail);
+
+            const progressRail = document.createElement('div');
+            progressRail.className = "absolute h-[2px] left-0 top-1/2 -translate-y-1/2 node-transition z-0";
+            progressRail.style.background = color;
+            progressRail.style.width = `${progressFraction * 100}%`;
+            container.appendChild(progressRail);
+
+            data.stations.forEach((station, i) => {
+                const nodeWrap = document.createElement('div');
+                nodeWrap.className = "flex flex-col items-center relative z-10 flex-1";
+
+                const dot = document.createElement('div');
+                dot.className = "node-transition rounded-full";
+
+                if (i === simulatedIndex) {
+                    dot.className = "relative flex items-center justify-center";
+                    dot.innerHTML = `
+                        <div class="absolute w-10 h-10 rounded-full" style="background: radial-gradient(circle, ${color}55, transparent)"></div>
+                        <div class="w-5 h-5 rounded-full border-4 node-transition z-10" style="background:${color}; border-color:${color}; box-shadow: 0 0 16px ${color}"></div>
+                    `;
+                } else if (i < simulatedIndex) {
+                    dot.className = "w-3.5 h-3.5 bg-[#341F60]";
+                } else {
+                    dot.className = "w-3.5 h-3.5 bg-[#090714] border-2";
+                    dot.style.borderColor = `${color}60`;
+                }
+
+                const label = document.createElement('div');
+                label.className = "mt-3 text-center node-transition";
+                label.style.width = data.stations.length > 7 ? "70px" : "85px";
+                label.style.fontSize = data.stations.length > 8 ? "8px" : "10px";
+                label.style.fontWeight = i === simulatedIndex ? "700" : "500";
+                label.style.color = i === simulatedIndex ? color : (i < simulatedIndex ? "rgba(245,243,255,0.22)" : "rgba(245,243,255,0.55)");
+                label.innerText = station;
+
+                if(i === simulatedIndex) {
+                    const subTag = document.createElement('div');
+                    subTag.className = "text-[7px] font-bold tracking-wider mt-1 opacity-60";
+                    subTag.innerText = "● CURRENT";
+                    label.appendChild(subTag);
+                }
+
+                nodeWrap.appendChild(dot);
+                nodeWrap.appendChild(label);
+                container.appendChild(nodeWrap);
+            });
+        }
+
+        function startLiveTrackingSimulation() {
+            if(trackingInterval) clearInterval(trackingInterval);
+            
+            const schema = ROUTING_SCHEMA[activeScenario];
+            simulatedIndex = schema.activeIndex;
+            syncActiveNavigationDOM();
+
+            trackingInterval = setInterval(() => {
+                if (simulatedIndex < schema.stations.length - 1) {
+                    simulatedIndex++;
+                    syncActiveNavigationDOM();
+                } else {
+                    clearInterval(trackingInterval);
+                }
+            }, 5000);
+        }
+
+        function dismissBanner() {
+            showBanner = false;
+            const banner = document.getElementById('alert-banner');
+            banner.classList.add('max-height-0', 'opacity-0', 'pointer-events-none');
+            banner.classList.remove('scale-100');
+        }
+
+        function triggerReroute() {
+            bannerTextOverride = "Reroute Applied Successfully. Optimizing track…";
+            rerouteApplied = true;
+            syncActiveNavigationDOM();
+            
+            setTimeout(() => { dismissBanner(); }, 1500);
+        }
+
+        function resetBannerState() {
+            showBanner = true;
+            rerouteApplied = false;
+            bannerTextOverride = null;
+            const banner = document.getElementById('alert-banner');
+            banner.classList.remove('max-height-0', 'opacity-0', 'pointer-events-none');
+            banner.classList.add('scale-100');
+        }
+
+        function changeViewState(targetState) {
+            currentRadarState = targetState;
+            const mapLayer = document.getElementById('map-view-layer');
+            const navLayer = document.getElementById('active-nav-layer');
+            const mapTab = document.getElementById('toggle-map-btn');
+            const navTab = document.getElementById('toggle-nav-btn');
+
+            if(targetState === "search") {
+                mapLayer.classList.remove('hidden');
+                navLayer.classList.add('hidden');
+                mapTab.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-[#834DFB] text-white";
+                navTab.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white";
+                navTab.style.background = "transparent";
+
+                if(trackingInterval) clearInterval(trackingInterval);
+                renderMapLayers();
+                map.flyTo([-6.2446, 106.8006], 14, { animate: true, duration: 1.0 });
+            } else {
+                mapLayer.classList.add('hidden');
+                navLayer.classList.remove('hidden');
+                navTab.className = `px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-white`;
+                navTab.style.background = ROUTING_SCHEMA[activeScenario].lineColor;
+                mapTab.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white";
+                mapTab.style.background = "transparent";
+
+                resetBannerState();
+                startLiveTrackingSimulation();
+
+                const data = ROUTING_SCHEMA[activeScenario];
+                map.flyTo(data.mapCenter, data.mapZoom, { animate: true, duration: 1.2 });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initLeafletMap();
+
+            document.getElementById('toggle-map-btn').addEventListener('click', () => changeViewState("search"));
+            document.getElementById('toggle-nav-btn').addEventListener('click', () => changeViewState("active"));
+            document.getElementById('start-nav-btn').addEventListener('click', () => changeViewState("active"));
+            document.getElementById('map-return-btn').addEventListener('click', () => changeViewState("search"));
+            document.getElementById('nav-close-btn').addEventListener('click', () => changeViewState("search"));
+        });
+    </script>
 </html>
