@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Radar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        base: '#110c1b',    
+                        surface: '#1a1625', 
+                        border: 'rgba(255, 255, 255, 0.06)', 
+                        purpleAcc: '#834DFB',
+                        yellowAcc: '#F0E100',
+                        greenAcc: '#22c55e',
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        .ancer-tile { filter: invert(1) hue-rotate(210deg) brightness(0.72) saturate(0.5) contrast(1.12); }
+        .leaflet-container { background: #090714 !important; }
+        .leaflet-control-attribution, .leaflet-control-zoom { display: none !important; }
+        
+        @keyframes ancerPulse {
+            0%   { transform: scale(1);   opacity: 0.85; }
+            70%  { transform: scale(3.5); opacity: 0; }
+            100% { transform: scale(1);   opacity: 0; }
+        }
+        .pulse-layer { animation: ancerPulse 1.8s ease-out infinite; }
+        .node-transition { transition: all 0.4s linear; }
+    </style>
+</head>
+<body class="bg-base text-white font-sans flex min-h-screen overflow-hidden">
+
+    <aside class="w-20 h-screen sticky top-0 border-r border-border flex flex-col items-center py-6 shrink-0 bg-surface z-50">
+        <div class="w-10 h-10 bg-[#834DFB] rounded-xl flex items-center justify-center cursor-pointer hover:bg-purple-500 transition">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        </div>
+        <nav class="my-auto flex flex-col gap-4 w-full items-center">
+            <label class="group relative w-12 h-12 cursor-pointer flex items-center justify-center shrink-0">
+                <input type="radio" name="sidebar-menu" class="peer hidden" checked>
+                <div class="absolute inset-0 rounded-2xl flex items-center justify-center transition-all duration-200 text-gray-500 hover:text-white hover:bg-white/10 peer-checked:bg-[#834DFB]">
+                    <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="9" rx="1.5"></rect><rect x="4" y="16" width="6" height="4" rx="1.5"></rect><rect x="13" y="4" width="7" height="4" rx="1.5"></rect><rect x="13" y="11" width="7" height="9" rx="1.5"></rect></svg>
+                </div>
+            </label>
+        </nav>
+    </aside>
+
+    <main class="flex-1 p-10 flex flex-col h-screen overflow-hidden">
+        <div class="flex justify-between items-start mb-8 shrink-0">
+            <div>
+                <div class="text-[#834DFB] text-[11px] font-bold tracking-[2px] mb-2 uppercase">Module B</div>
+                <h1 class="text-3xl font-extrabold text-[#F5F3FF] tracking-tight">Live Radar</h1>
+            </div>
+            <div class="flex gap-1 bg-[#1e1235] border border-[#341F60] rounded-xl p-1 relative z-30">
+                <button id="toggle-map-btn" class="px-4 py-2 rounded-lg text-sm font-semibold bg-[#834DFB] text-white">Map View</button>
+                <button id="toggle-nav-btn" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-400">Active Navigation</button>
+            </div>
+        </div>
+
+        <div id="display-container" class="flex-1 border border-[#251f4f] rounded-3xl overflow-hidden relative shadow-2xl min-h-[480px]">
+            
+            <div id="map-view-layer" class="absolute inset-0 z-10 flex flex-col justify-between">
+                <div id="leaflet-map-mount" class="absolute inset-0 z-0"></div>
+                
+                <div class="absolute top-5 left-1/2 -translate-x-1/2 w-[480px] z-[1000]">
+                    <div class="flex items-center gap-3 bg-[#0c071ae6] border border-[#341F60] rounded-xl p-4 backdrop-blur-xl shadow-xl">
+                        <input id="search-station-input" type="text" placeholder="Search MRT Jakarta stations…" class="flex-1 bg-transparent border-none text-sm text-[#F5F3FF] outline-none">
+                    </div>
+                </div>
+
+                <div class="absolute bottom-5 left-5 bg-[#120e2b99] border border-[#251f4f] rounded-xl p-4 backdrop-blur-xl z-[1000] space-y-2">
+                    <div class="text-[10px] font-bold text-gray-400 tracking-wider mb-2">TRANSIT LINES</div>
+                    <div id="legend-mrt" class="flex items-center gap-2"><div class="w-4 h-[3px] bg-[#834DFB] rounded shadow-[0_0_6px_#834DFB]"></div><span class="text-xs text-gray-300">MRT Jakarta</span></div>
+                    <div id="legend-tj" class="flex items-center gap-2 opacity-40"><div class="w-4 h-[3px] bg-[#F0E100] rounded"></div><span class="text-xs text-gray-400">TransJakarta</span></div>
+                    <div id="legend-krl" class="flex items-center gap-2 opacity-40"><div class="w-4 h-[3px] bg-[#22c55e] rounded"></div><span class="text-xs text-gray-400">KRL Commuter</span></div>
+                </div>
+
+                <div class="absolute bottom-5 left-1/2 -translate-x-1/2 bg-[#0c071ae6] border border-[#251f4f] rounded-xl p-2 backdrop-blur-xl z-[1000] flex gap-1.5">
+                    <button onclick="switchScenario('MRT')" id="chip-MRT" class="px-3.5 py-2 rounded-lg text-xs font-bold border border-[#834DFB] bg-[#834DFB]1a text-[#834DFB]">MRT Jakarta</button>
+                    <button onclick="switchScenario('TJ')" id="chip-TJ" class="px-3.5 py-2 rounded-lg text-xs font-bold text-gray-500">TransJakarta</button>
+                    <button onclick="switchScenario('KRL')" id="chip-KRL" class="px-3.5 py-2 rounded-lg text-xs font-bold text-gray-500">KRL Commuter</button>
+                </div>
+
+                <button id="start-nav-btn" class="absolute bottom-5 right-5 bg-[#834DFB] text-white px-5 py-3 rounded-xl text-sm font-bold z-[1000]">Start Navigation</button>
+            </div>
+
+            <div id="active-nav-layer" class="absolute inset-0 bg-[#090714] z-20 hidden flex-col justify-center px-12">
+                <div class="absolute inset-0 opacity-5 pointer-events-none" id="grid-canvas"></div>
+
+                <div id="alert-banner" class="absolute top-5 left-1/2 -translate-x-1/2 w-[600px] z-30 transition-all duration-300 transform scale-100">
+                    <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 flex items-center gap-3 backdrop-blur-md">
+                        <svg class="w-4 h-4 text-[#F0E100] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <span id="banner-text" class="flex-1 text-xs font-semibold text-[#F5F3FF]">Warning Banner Text</span>
+                        <button id="reroute-btn" onclick="triggerReroute()" class="bg-[#F0E100] text-[#18102B] text-[11px] font-extrabold px-3 py-1.5 rounded-lg hover:opacity-90 transition shrink-0">Reroute Seamlessly</button>
+                        <button onclick="dismissBanner()" class="text-gray-500 hover:text-white transition"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                    </div>
+                </div>
+
+                <button id="map-return-btn" class="absolute top-5 right-5 flex items-center gap-2 bg-[#0d071ae6] border border-[#341F60] rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-300 hover:text-white transition backdrop-blur-md z-30">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                    Map View
+                </button>
+
+                <div class="flex items-center w-full h-full pt-16">
+                    <div class="w-[320px] bg-[#120e2b99] border border-[#251f4f] rounded-2xl p-6 backdrop-blur-xl shrink-0 z-10 shadow-xl space-y-5">
+                        <div>
+                            <div id="cp-header-label" class="text-[10px] font-bold tracking-wider mb-4">CHECKPOINT STATUS</div>
+                            <div class="text-xs text-gray-400 mb-1" id="cp-active-title">Active Station</div>
+                            <div id="cp-active-name" class="text-xl font-extrabold text-[#F5F3FF] tracking-tight leading-none">Blok M Transit</div>
+                        </div>
+                        <div class="space-y-3.5 border-b border-[#341F60] pb-5 text-xs">
+                            <div class="flex justify-between"><span class="text-gray-400" id="cp-next-title">Next Station</span><span id="cp-next-name" class="font-semibold text-white">Sisingamangaraja</span><span id="cp-next-eta" class="font-bold">3 min</span></div>
+                            <div class="flex justify-between"><span class="text-gray-400">ETA Destination</span><span id="cp-dest-name" class="font-semibold text-white">Bundaran HI</span><span id="cp-dest-eta" class="font-bold">24 min</span></div>
+                            <div class="flex justify-between"><span class="text-gray-400">Remaining</span><span id="cp-remaining-val" class="font-semibold text-white">4 stations</span></div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                          <div>
+                              <div class="text-[10px] text-gray-400 mb-0.5">Integrated Fare</div>
+                              <div id="cp-fare" class="text-xl font-extrabold text-[#F0E100]">Rp14.000</div>
+                          </div>
+                          <div id="cp-badge" class="rounded-lg px-2.5 py-1 text-[10px] font-bold tracking-wide border">STATUS</div>
+                        </div>
+                    </div>
+
+                    <div class="flex-1 pl-12 flex flex-col justify-center relative">
+                        <div id="track-line-name" class="text-[9px] font-bold tracking-[2px] text-center mb-8 uppercase text-gray-500">LINE NAME</div>
+                        <div class="relative w-full flex items-center justify-between" id="timeline-node-container"></div>
+                    </div>
+                </div>
+
+                <button id="nav-close-btn" class="absolute bottom-6 right-6 w-14 h-14 bg-red-500/80 hover:bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg transition transform hover:scale-105 z-30">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const ROUTING_SCHEMA = {
+            MRT: {
+                transitType: "MRT Jakarta", lineColor: "#834DFB",
+                lineName: "MRT SOUTH-NORTH LINE · ACTIVE NAVIGATION", fareValue: "Rp14.000",
+                activeStationName: "Blok M Transit", nextStation: "Sisingamangaraja", destination: "Bundaran HI",
+                etaNext: "3 min", etaDest: "24 min", remainingStops: "4 stations",
+                delayMessage: "Severe Delay: Red Line backlog due to extreme weather.",
+                onScheduleLabel: "ON SCHEDULE", onScheduleColor: "#22c55e",
+                mapCenter: [-6.2446, 106.8006], mapZoom: 16,
+                stations: ["Lebak Bulus", "Fatmawati", "Cipete Raya", "Haji Nawi", "Blok A", "Blok M", "Sisingamangaraja", "Senayan", "ISTN", "Bundaran HI"],
+                activeIndex: 5, linePath: [[-6.2894, 106.7742], [-6.2803, 106.7944], [-6.2550, 106.7998], [-6.2446, 106.8006], [-6.2365, 106.8015], [-6.2277, 106.8024], [-6.1950, 106.8231]],
+                stopsCoords: [[-6.2894, 106.7742], [-6.2803, 106.7944], [-6.2550, 106.7998], [-6.2446, 106.8006], [-6.2365, 106.8015], [-6.2277, 106.8024], [-6.1950, 106.8231]]
+            },
+            TJ: {
+                transitType: "TransJakarta", lineColor: "#F0E100",
+                lineName: "CORRIDOR 1 · BLOK M → KOTA", fareValue: "Rp3.500",
+                activeStationName: "Halte Blok M", nextStation: "Gelora Bung Karno", destination: "Polda Metro Jaya",
+                etaNext: "4 min", etaDest: "18 min", remainingStops: "4 halte",
+                delayMessage: "Notice: Corridor 1 — 8-min delay at GBK turnover gate.",
+                onScheduleLabel: "8 MIN DELAY", onScheduleColor: "#F0E100",
+                mapCenter: [-6.2300, 106.8100], mapZoom: 15,
+                stations: ["Halte Blok M", "Gelora Bung Karno", "Senayan", "Bendungan Hilir", "Polda Metro Jaya"],
+                activeIndex: 0, linePath: [[-6.2446, 106.7994], [-6.2300, 106.8050], [-6.2180, 106.8018], [-6.2089, 106.8261]],
+                stopsCoords: [[-6.2446, 106.7994], [-6.2180, 106.8018], [-6.2089, 106.8261]]
+            },
+            KRL: {
+                transitType: "KRL Commuter", lineColor: "#22c55e",
+                lineName: "BOGOR LINE · MANGGARAI → KP. BANDAN", fareValue: "Rp5.000",
+                activeStationName: "Sudirman Station", nextStation: "Karet", destination: "Kampung Bandan",
+                etaNext: "2 min", etaDest: "14 min", remainingStops: "3 stations",
+                delayMessage: "Advisory: KRL Bogor Line — signal check at Manggarai.",
+                onScheduleLabel: "ON TRACK", onScheduleColor: "#22c55e",
+                mapCenter: [-6.2013, 106.8230], mapZoom: 15,
+                stations: ["Manggarai", "Cikini", "Gondangdia", "Sudirman", "Karet", "Tanah Abang", "Kampung Bandan"],
+                activeIndex: 3, linePath: [[-6.2148, 106.8506], [-6.2080, 106.8380], [-6.2013, 106.8230], [-6.1960, 106.8120], [-6.1394, 106.8091]],
+                stopsCoords: [[-6.2148, 106.8506], [-6.2013, 106.8230], [-6.1877, 106.8055], [-6.1394, 106.8091]]
+            }
+        };
+
+        let activeScenario = "MRT";
+        let currentRadarState = "search";
+        let simulatedIndex = 0;
+        let showBanner = true;
+        let rerouteApplied = false;
+        let trackingInterval = null;
+        let bannerTextOverride = null;
+
+        let map = null;
+        let markerGroup = null;
+        let polylines = { mrt: null, tj: null, krl: null };
+
+        function initLeafletMap() {
+            map = L.map('leaflet-map-mount', {
+                center: [-6.2446, 106.8006],
+                zoom: 14,
+                zoomControl: false,
+                attributionControl: false
+            });
+
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                maxZoom: 19,
+                className: "ancer-tile"
+            }).addTo(map);
+
+            markerGroup = L.layerGroup().addTo(map);
+            renderMapLayers();
+        }
+
+        function renderMapLayers() {
+            if (!map) return;
+            markerGroup.clearLayers();
+
+            if(polylines.mrt) map.removeLayer(polylines.mrt);
+            if(polylines.tj) map.removeLayer(polylines.tj);
+            if(polylines.krl) map.removeLayer(polylines.krl);
+
+            polylines.mrt = L.polyline(ROUTING_SCHEMA.MRT.linePath, { color: "#834DFB", weight: 3.5, opacity: activeScenario === "MRT" ? 0.9 : 0.15 }).addTo(map);
+            polylines.tj = L.polyline(ROUTING_SCHEMA.TJ.linePath, { color: "#F0E100", weight: 3.5, opacity: activeScenario === "TJ" ? 0.9 : 0.15 }).addTo(map);
+            polylines.krl = L.polyline(ROUTING_SCHEMA.KRL.linePath, { color: "#22c55e", weight: 3.5, opacity: activeScenario === "KRL" ? 0.9 : 0.15 }).addTo(map);
+
+            const schema = ROUTING_SCHEMA[activeScenario];
+            schema.stopsCoords.forEach((coords, i) => {
+                if (i === (activeScenario === "MRT" ? 3 : activeScenario === "KRL" ? 2 : 0)) {
+                    L.marker(coords, {
+                        icon: L.divIcon({
+                            className: "",
+                            html: `<div style="position:relative;width:20px;height:20px">
+                                     <div class="pulse-layer" style="position:absolute;inset:-12px;border-radius:50%;background:${schema.lineColor}1a"></div>
+                                     <div class="pulse-layer" style="position:absolute;inset:-5px;border-radius:50%;background:${schema.lineColor}38;"></div>
+                                     <div style="width:20px;height:20px;border-radius:50%;background:${schema.lineColor};box-shadow:0 0 16px ${schema.lineColor}"></div>
+                                   </div>`,
+                            iconSize: [20, 20], iconAnchor: [10, 10]
+                        })
+                    }).addTo(markerGroup);
+                } else {
+                    L.circleMarker(coords, { radius: 5, color: schema.lineColor, fillColor: "#090714", fillOpacity: 0.9, weight: 2 }).addTo(markerGroup);
+                }
+            });
+        }
+
+        function switchScenario(target) {
+            activeScenario = target;
+            
+            Object.keys(ROUTING_SCHEMA).forEach(key => {
+                const btn = document.getElementById(`chip-${key}`);
+                const dot = btn.querySelector('div');
+                if(key === target) {
+                    btn.className = `flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all border text-[${ROUTING_SCHEMA[key].lineColor}]`;
+                    btn.style.borderColor = ROUTING_SCHEMA[key].lineColor;
+                    btn.style.color = ROUTING_SCHEMA[key].lineColor;
+                    btn.style.background = `${ROUTING_SCHEMA[key].lineColor}1a`;
+                    dot.style.opacity = "1";
+                } else {
+                    btn.className = "flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all border border-transparent text-gray-500";
+                    btn.style.borderColor = "transparent";
+                    btn.style.color = "";
+                    btn.style.background = "";
+                    dot.style.opacity = "0.4";
+                }
+            });
+
+            ["mrt", "tj", "krl"].forEach(mode => {
+                const legendEl = document.getElementById(`legend-${mode}`);
+                if(mode === target.toLowerCase()) {
+                    legendEl.classList.remove('opacity-40');
+                    legendEl.querySelector('span').className = "text-xs font-semibold text-gray-300";
+                } else {
+                    legendEl.classList.add('opacity-40');
+                    legendEl.querySelector('span').className = "text-xs text-gray-400";
+                }
+            });
+
+            document.getElementById('search-station-input').placeholder = `Search ${ROUTING_SCHEMA[target].transitType} stations…`;
+            renderMapLayers();
+            
+            const data = ROUTING_SCHEMA[target];
+            map.flyTo(data.mapCenter, data.mapZoom, { animate: true, duration: 1.0 });
+        }
+
+        function syncActiveNavigationDOM() {
+            const data = ROUTING_SCHEMA[activeScenario];
+            const color = data.lineColor;
+
+            document.getElementById('track-line-name').innerText = data.lineName;
+            document.getElementById('track-line-name').style.color = `${color}aa`;
+            document.getElementById('cp-header-label').style.color = color;
+            document.getElementById('cp-active-title').innerText = `Active ${data.transitType === "TransJakarta" ? "Halte" : "Station"}`;
+            document.getElementById('cp-next-title').innerText = `Next ${data.transitType === "TransJakarta" ? "Halte" : "Station"}`;
+            document.getElementById('cp-fare').innerText = data.fareValue;
+
+            const activeStationName = data.stations[simulatedIndex];
+            document.getElementById('cp-active-name').innerText = activeStationName;
+
+            const isAtTerminus = simulatedIndex >= data.stations.length - 1;
+            const remainingCount = (data.stations.length - 1) - simulatedIndex;
+
+            document.getElementById('cp-next-name').innerText = isAtTerminus ? "—" : data.stations[simulatedIndex + 1];
+            document.getElementById('cp-next-eta').innerText = isAtTerminus ? "" : data.etaNext;
+            document.getElementById('cp-next-eta').style.color = color;
+
+            const baseMinutes = parseInt(data.etaDest) || 20;
+            const stepDelta = simulatedIndex - data.activeIndex;
+            const maxSteps = Math.max(1, (data.stations.length - 1) - data.activeIndex);
+            document.getElementById('cp-dest-eta').innerText = isAtTerminus ? "Arrived" : `${Math.max(1, Math.round(baseMinutes * (1 - stepDelta / maxSteps)))} min`;
+            document.getElementById('cp-dest-eta').style.color = color;
+            document.getElementById('cp-dest-name').innerText = data.destination;
+
+            document.getElementById('cp-remaining-val').innerText = isAtTerminus ? "Destination Reached" : `${remainingCount} ${data.transitType === "TransJakarta" ? "halte" : "station"}${remainingCount > 1 ? 's' : ''}`;
+
+            const currentBadgeLabel = (rerouteApplied || isAtTerminus) ? "ON TRACK" : data.onScheduleLabel;
+            const currentBadgeColor = (rerouteApplied || isAtTerminus) ? "#22c55e" : data.onScheduleColor;
+            
+            const badge = document.getElementById('cp-badge');
+            badge.innerText = currentBadgeLabel;
+            badge.style.color = currentBadgeColor;
+            badge.style.borderColor = `${currentBadgeColor}50`;
+            badge.style.background = `${currentBadgeColor}15`;
+
+            document.getElementById('banner-text').innerText = bannerTextOverride ?? data.delayMessage;
+            const rerouteBtn = document.getElementById('reroute-btn');
+            if(rerouteApplied) {
+                rerouteBtn.classList.add('hidden');
+            } else {
+                rerouteBtn.classList.remove('hidden');
+            }
+
+            const container = document.getElementById('timeline-node-container');
+            container.innerHTML = "";
+
+            const progressFraction = simulatedIndex / (data.stations.length - 1);
+            
+            const baseRail = document.createElement('div');
+            baseRail.className = "absolute h-[2px] inset-x-0 top-1/2 -translate-y-1/2 bg-white/10 z-0";
+            container.appendChild(baseRail);
+
+            const progressRail = document.createElement('div');
+            progressRail.className = "absolute h-[2px] left-0 top-1/2 -translate-y-1/2 node-transition z-0";
+            progressRail.style.background = color;
+            progressRail.style.width = `${progressFraction * 100}%`;
+            container.appendChild(progressRail);
+
+            data.stations.forEach((station, i) => {
+                const nodeWrap = document.createElement('div');
+                nodeWrap.className = "flex flex-col items-center relative z-10 flex-1";
+
+                const dot = document.createElement('div');
+                dot.className = "node-transition rounded-full";
+
+                if (i === simulatedIndex) {
+                    dot.className = "relative flex items-center justify-center";
+                    dot.innerHTML = `
+                        <div class="absolute w-10 h-10 rounded-full" style="background: radial-gradient(circle, ${color}55, transparent)"></div>
+                        <div class="w-5 h-5 rounded-full border-4 node-transition z-10" style="background:${color}; border-color:${color}; box-shadow: 0 0 16px ${color}"></div>
+                    `;
+                } else if (i < simulatedIndex) {
+                    dot.className = "w-3.5 h-3.5 bg-[#341F60]";
+                } else {
+                    dot.className = "w-3.5 h-3.5 bg-[#090714] border-2";
+                    dot.style.borderColor = `${color}60`;
+                }
+
+                const label = document.createElement('div');
+                label.className = "mt-3 text-center node-transition";
+                label.style.width = data.stations.length > 7 ? "70px" : "85px";
+                label.style.fontSize = data.stations.length > 8 ? "8px" : "10px";
+                label.style.fontWeight = i === simulatedIndex ? "700" : "500";
+                label.style.color = i === simulatedIndex ? color : (i < simulatedIndex ? "rgba(245,243,255,0.22)" : "rgba(245,243,255,0.55)");
+                label.innerText = station;
+
+                if(i === simulatedIndex) {
+                    const subTag = document.createElement('div');
+                    subTag.className = "text-[7px] font-bold tracking-wider mt-1 opacity-60";
+                    subTag.innerText = "● CURRENT";
+                    label.appendChild(subTag);
+                }
+
+                nodeWrap.appendChild(dot);
+                nodeWrap.appendChild(label);
+                container.appendChild(nodeWrap);
+            });
+        }
+
+        function startLiveTrackingSimulation() {
+            if(trackingInterval) clearInterval(trackingInterval);
+            
+            const schema = ROUTING_SCHEMA[activeScenario];
+            simulatedIndex = schema.activeIndex;
+            syncActiveNavigationDOM();
+
+            trackingInterval = setInterval(() => {
+                if (simulatedIndex < schema.stations.length - 1) {
+                    simulatedIndex++;
+                    syncActiveNavigationDOM();
+                } else {
+                    clearInterval(trackingInterval);
+                }
+            }, 5000);
+        }
+
+        function dismissBanner() {
+            showBanner = false;
+            const banner = document.getElementById('alert-banner');
+            banner.classList.add('max-height-0', 'opacity-0', 'pointer-events-none');
+            banner.classList.remove('scale-100');
+        }
+
+        function triggerReroute() {
+            bannerTextOverride = "Reroute Applied Successfully. Optimizing track…";
+            rerouteApplied = true;
+            syncActiveNavigationDOM();
+            
+            setTimeout(() => { dismissBanner(); }, 1500);
+        }
+
+        function resetBannerState() {
+            showBanner = true;
+            rerouteApplied = false;
+            bannerTextOverride = null;
+            const banner = document.getElementById('alert-banner');
+            banner.classList.remove('max-height-0', 'opacity-0', 'pointer-events-none');
+            banner.classList.add('scale-100');
+        }
+
+        function changeViewState(targetState) {
+            currentRadarState = targetState;
+            const mapLayer = document.getElementById('map-view-layer');
+            const navLayer = document.getElementById('active-nav-layer');
+            const mapTab = document.getElementById('toggle-map-btn');
+            const navTab = document.getElementById('toggle-nav-btn');
+
+            if(targetState === "search") {
+                mapLayer.classList.remove('hidden');
+                navLayer.classList.add('hidden');
+                mapTab.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-[#834DFB] text-white";
+                navTab.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white";
+                navTab.style.background = "transparent";
+
+                if(trackingInterval) clearInterval(trackingInterval);
+                renderMapLayers();
+                map.flyTo([-6.2446, 106.8006], 14, { animate: true, duration: 1.0 });
+            } else {
+                mapLayer.classList.add('hidden');
+                navLayer.classList.remove('hidden');
+                navTab.className = `px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-white`;
+                navTab.style.background = ROUTING_SCHEMA[activeScenario].lineColor;
+                mapTab.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white";
+                mapTab.style.background = "transparent";
+
+                resetBannerState();
+                startLiveTrackingSimulation();
+
+                const data = ROUTING_SCHEMA[activeScenario];
+                map.flyTo(data.mapCenter, data.mapZoom, { animate: true, duration: 1.2 });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initLeafletMap();
+
+            document.getElementById('toggle-map-btn').addEventListener('click', () => changeViewState("search"));
+            document.getElementById('toggle-nav-btn').addEventListener('click', () => changeViewState("active"));
+            document.getElementById('start-nav-btn').addEventListener('click', () => changeViewState("active"));
+            document.getElementById('map-return-btn').addEventListener('click', () => changeViewState("search"));
+            document.getElementById('nav-close-btn').addEventListener('click', () => changeViewState("search"));
+        });
+    </script>
+</html>
