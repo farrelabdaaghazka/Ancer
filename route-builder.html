@@ -145,11 +145,11 @@
         </header>
 
         <div class="flex gap-8 border-b border-white/10 mb-6 shrink-0">
-            <button class="pb-3 border-b-2 border-[#8b5cf6] text-white font-semibold text-sm">Create Plan</button>
-            <button class="pb-3 text-gray-500 font-medium text-sm hover:text-gray-300 transition-colors">My Schedule</button>
+            <button id="tab-create" onclick="switchTab('create')" class="pb-3 border-b-2 border-[#8b5cf6] text-white font-semibold text-sm">Create Plan</button>
+            <button id="tab-schedule" onclick="switchTab('schedule')" class="pb-3 text-gray-500 font-medium text-sm hover:text-gray-300 transition-colors">My Schedule</button>
         </div>
         
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div id="content-create" class="grid grid-cols-1 xl:grid-cols-3 gap-6">
             
             <div class="flex flex-col h-full pr-0 xl:pr-4">
                 
@@ -387,7 +387,41 @@
             </div>
 
         </div>
+
+        <div id="content-schedule" class="hidden flex-1 min-h-0 bg-[#1a1625] border border-white/5 rounded-2xl p-8 flex-col items-center justify-center text-center">
+            <div class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-5 border border-white/10">
+                <svg class="w-10 h-10 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            </div>
+    
+        </div>
     </main>
+
+    <script>
+    function switchTab(tabName) {
+        const btnCreate = document.getElementById('tab-create');
+        const btnSchedule = document.getElementById('tab-schedule');
+        const contentCreate = document.getElementById('content-create');
+        const contentSchedule = document.getElementById('content-schedule');
+
+        if (tabName === 'create') {
+            btnCreate.className = "pb-3 border-b-2 border-[#8b5cf6] text-white font-semibold text-sm cursor-pointer transition-colors";
+            btnSchedule.className = "pb-3 border-b-2 border-transparent text-gray-500 font-medium text-sm hover:text-gray-300 cursor-pointer transition-colors";
+            
+            contentCreate.classList.remove('hidden');
+            contentCreate.classList.add('grid');
+            contentSchedule.classList.add('hidden');
+            contentSchedule.classList.remove('flex');
+        } else if (tabName === 'schedule') {
+            btnSchedule.className = "pb-3 border-b-2 border-[#8b5cf6] text-white font-semibold text-sm cursor-pointer transition-colors";
+            btnCreate.className = "pb-3 border-b-2 border-transparent text-gray-500 font-medium text-sm hover:text-gray-300 cursor-pointer transition-colors";
+            
+            contentSchedule.classList.remove('hidden');
+            contentSchedule.classList.add('flex');
+            contentCreate.classList.add('hidden');
+            contentCreate.classList.remove('grid');
+        }
+    }
+    </script>
 
 </body>
 </html>
