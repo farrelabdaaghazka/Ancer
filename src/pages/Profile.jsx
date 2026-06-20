@@ -17,11 +17,10 @@ export default function Profile() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
-  // Modal States
   const [showCardModal, setShowCardModal] = useState(false);
   const [showAppModal, setShowAppModal] = useState(false);
 
-  // Form States
+
   const [newCard, setNewCard] = useState({ label: "", type: "Flazz BCA", cardNumber: "", balance: "Rp0" });
   const [newApp, setNewApp] = useState({ name: "", account: "", balance: "0" });
 
@@ -277,7 +276,6 @@ export default function Profile() {
                   const isEmoney = card.type.includes("e-Money");
                   const isTapcash = card.type.includes("TapCash");
                   
-                  // Logika pemisahan warna kustom agar tidak bentrok atau satu warna lagi
                   const cardBg = isFlazz 
                     ? "from-[#1e1b4b] via-[#2e1065] to-[#110c1b]" 
                     : isEmoney 
@@ -418,7 +416,6 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* MODAL: ADD SMART CARD */}
       {showCardModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-[#1a1625] border border-white/10 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl animate-fadeIn text-left">
@@ -471,7 +468,6 @@ export default function Profile() {
         </div>
       )}
 
-      {/* MODAL: ADD TRANSIT APPLICATION */}
       {showAppModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-[#1a1625] border border-white/10 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl animate-fadeIn text-left">
