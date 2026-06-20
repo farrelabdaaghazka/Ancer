@@ -18,11 +18,9 @@ export default function Profile() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
-  // Modal States
   const [showCardModal, setShowCardModal] = useState(false);
   const [showAppModal, setShowAppModal] = useState(false);
 
-  // Form States
   const [newCard, setNewCard] = useState({ label: "", type: "Flazz BCA", cardNumber: "", balance: "Rp0" });
   const [newApp, setNewApp] = useState({ name: "", account: "", balance: "0" });
 
@@ -120,7 +118,6 @@ export default function Profile() {
 
   return (
     <div className="flex-1 min-h-screen bg-[#110c1b] text-white p-6 md:p-10 overflow-y-auto flex justify-center">
-      {/* Pengunci lebar utama (max-w-4xl) agar semua baris seimbang atas-bawah */}
       <div className="w-full max-w-4xl space-y-6">
         
         <div className="text-left">
@@ -128,7 +125,6 @@ export default function Profile() {
           <h1 className="text-3xl font-black text-[#F5F3FF] tracking-tight">My Profile</h1>
         </div>
 
-        {/* Tab menu meregang penuh mengikuti lebar boks bawah secara simetris */}
         <div className="w-full bg-[#1a1625] border border-white/5 rounded-2xl p-1.5 grid grid-cols-3 gap-3 shrink-0 shadow-md">
           <button
             onClick={() => setActiveTab("personal")}
@@ -150,7 +146,6 @@ export default function Profile() {
           </button>
         </div>
 
-        {/* Kotak Konten Bodi Utama */}
         <div className="w-full bg-[#1a1625] border border-white/5 rounded-3xl p-6 md:p-8 min-h-[450px] shadow-xl">
           {activeTab === "personal" && (
             <div className="space-y-6 animate-fadeIn text-left">
@@ -419,7 +414,6 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* MODAL: ADD SMART CARD */}
       {showCardModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-[#1a1625] border border-white/10 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl animate-fadeIn text-left">
@@ -472,7 +466,6 @@ export default function Profile() {
         </div>
       )}
 
-      {/* MODAL: ADD TRANSIT APPLICATION */}
       {showAppModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-[#1a1625] border border-white/10 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl animate-fadeIn text-left">
