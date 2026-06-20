@@ -14,6 +14,8 @@ import {
 export default function Profile() {
   const [activeTab, setActiveTab] = useState("personal");
   const [copiedCard, setCopiedCard] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   const [personalInfo, setPersonalInfo] = useState({
     fullName: "Farrel Abda Aghazka",
@@ -56,6 +58,17 @@ export default function Profile() {
       }
       return app;
     }));
+  };
+
+  const handleSaveProfile = () => {
+    setIsSaving(true);
+    setTimeout(() => {
+      setIsSaving(false);
+      setSaveSuccess(true);
+      setTimeout(() => {
+        setSaveSuccess(false);
+      }, 3000);
+    }, 1500);
   };
 
   return (
@@ -168,8 +181,30 @@ export default function Profile() {
                 </div>
 
                 <div className="flex justify-end pt-4">
-                  <button className="flex items-center gap-2 bg-[#834DFB] hover:bg-[#723ee3] text-white text-xs font-bold px-5 py-3 rounded-xl shadow-lg cursor-pointer transition-all">
-                    <Save size={14} /> Save Profile Changes
+                  <button 
+                    onClick={handleSaveProfile}
+                    disabled={isSaving}
+                    style={{
+                      backgroundColor: saveSuccess ? "#22c55e" : isSaving ? "#632bd6" : "#834DFB"
+                    }}
+                    className="flex items-center gap-2 text-white text-xs font-bold px-5 py-3 rounded-xl shadow-lg cursor-pointer transition-all duration-300 disabled:opacity-80 disabled:cursor-not-allowed min-w-[180px] justify-center"
+                  >
+                    {isSaving ? (
+                      <>
+                        <RefreshCw size={14} className="animate-spin" />
+                        <span>Saving changes...</span>
+                      </>
+                    ) : saveSuccess ? (
+                      <>
+                        <CheckCircle2 size={14} className="animate-bounce" />
+                        <span>Changes Saved!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Save size={14} />
+                        <span>Save Profile Changes</span>
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
