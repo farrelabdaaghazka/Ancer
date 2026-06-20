@@ -1,16 +1,31 @@
-# React + Vite
+# ANCER - Urban Commuter Navigation & Mobility Ledger
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ANCER adalah platform SaaS manajemen mobilitas urban terpadu yang dirancang untuk membantu komuter di wilayah metropolitan Jakarta dalam merencanakan rute multi-moda, memantau pergerakan armada secara real-time, serta melacak pengeluaran finansial transportasi secara otomatis.
 
-Currently, two official plugins are available:
+## 🚀 Fitur Utama Sistem
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+*   **Landing Page**: Antarmuka interaktif dwi-bahasa (ID/EN) premium yang menyajikan proposisi nilai inti ANCER.
+*   **Ops Center (Dashboard)**: Dasbor analitik pusat untuk memantau ringkasan mobilitas harian.
+*   **Route Builder**: Modul pencarian rute terbaik yang mengintegrasikan berbagai moda transportasi publik urban Jakarta.
+*   **Live Radar**: Peta spasial interaktif berbasis OpenStreetMap dan Leaflet yang menampilkan visualisasi *split-screen* pergerakan armada, *live fleet intelligence*, serta *scrollable horizontal track timeline*.
+*   **Mobility Ledger**: Kubah finansial digital untuk melacak pengeluaran tarif integrasi angkutan umum secara otomatis setelah perjalanan selesai.
+*   **My Profile**: Pusat pengaturan data pengguna dan preferensi komputasi mobilitas harian.
 
-## React Compiler
+## 🛠️ Tech Stack & Dependensi
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Aplikasi ini dibangun menggunakan arsitektur frontend modern:
 
-## Expanding the ESLint configuration
+*   **Core**: React + Vite
+*   **Styling**: Tailwind CSS
+*   **Icons**: Lucide React
+*   **Mapping**: Leaflet + OpenStreetMap Canvas
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 💻 Panduan Instalasi Lokal
+
+Ikuti langkah-langkah di bawah ini untuk menjalankan server pengembangan lokal di komputer kamu:
+
+### 1. Kloning Repositori & Pindah Branch
+```bash
+git clone [https://github.com/farrelabdaaghazka/Ancer.git](https://github.com/farrelabdaaghazka/Ancer.git)
+cd Ancer
+git checkout main
