@@ -8,8 +8,7 @@ import {
   CheckCircle2, 
   XCircle, 
   RefreshCw,
-  Plus,
-  ArrowUpRight
+  Plus
 } from "lucide-react";
 
 export default function Profile() {
@@ -18,9 +17,11 @@ export default function Profile() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
+  // Modal States
   const [showCardModal, setShowCardModal] = useState(false);
   const [showAppModal, setShowAppModal] = useState(false);
 
+  // Form States
   const [newCard, setNewCard] = useState({ label: "", type: "Flazz BCA", cardNumber: "", balance: "Rp0" });
   const [newApp, setNewApp] = useState({ name: "", account: "", balance: "0" });
 
@@ -185,7 +186,7 @@ export default function Profile() {
                     value={personalInfo.email}
                     onChange={(e) => setPersonalInfo({...personalInfo, email: e.target.value})}
                     className="w-full bg-[#110c1b] border border-white/10 rounded-xl px-4 py-3 text-sm font-semibold text-white focus:outline-none focus:border-[#834DFB] transition-colors"
-                  />
+                    />
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Mobile Number</label>
@@ -239,12 +240,12 @@ export default function Profile() {
                       <RefreshCw size={14} className="animate-spin" />
                       <span>Saving changes...</span>
                     </>
-                    ) : saveSuccess ? (
+                  ) : saveSuccess ? (
                     <>
                       <CheckCircle2 size={14} className="animate-bounce" />
                       <span>Changes Saved!</span>
                     </>
-                    ) : (
+                  ) : (
                     <>
                       <Save size={14} />
                       <span>Save Profile Changes</span>
@@ -276,13 +277,16 @@ export default function Profile() {
                   const isEmoney = card.type.includes("e-Money");
                   const isTapcash = card.type.includes("TapCash");
                   
+                  // Logika pemisahan warna kustom agar tidak bentrok atau satu warna lagi
                   const cardBg = isFlazz 
                     ? "from-[#1e1b4b] via-[#2e1065] to-[#110c1b]" 
                     : isEmoney 
-                      ? "from-[#062f4f] via-[#0b132b] to-[#110c1b]" 
-                      : "from-[#cc5500]/60 via-[#04394e] to-[#110c1b]";
+                      ? "from-[#022340] via-[#0b132b] to-[#110c1b]" 
+                      : isTapcash
+                        ? "from-[#7c2d12] via-[#431407] to-[#110c1b]"
+                        : "from-[#064e3b] via-[#022c22] to-[#110c1b]";
                         
-                  const accentColor = isFlazz ? "#834DFB" : isEmoney ? "#F0E100" : isTapcash ? "#e06c00" : "#22c55e";
+                  const accentColor = isFlazz ? "#834DFB" : isEmoney ? "#3B82F6" : isTapcash ? "#f97316" : "#10b981";
 
                   return (
                     <div 
@@ -414,6 +418,7 @@ export default function Profile() {
         </div>
       </div>
 
+      {/* MODAL: ADD SMART CARD */}
       {showCardModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-[#1a1625] border border-white/10 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl animate-fadeIn text-left">
@@ -466,10 +471,11 @@ export default function Profile() {
         </div>
       )}
 
+      {/* MODAL: ADD TRANSIT APPLICATION */}
       {showAppModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-[#1a1625] border border-white/10 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl animate-fadeIn text-left">
-            <div className="flex justify-between items-center pb-2 border-b border-white/5">
+            <div className="fixed justify-between items-center pb-2 border-b border-white/5">
               <h4 className="text-base font-black text-white">Authorize New Application Sync</h4>
               <button onClick={() => setShowAppModal(false)} className="text-gray-400 hover:text-white text-sm font-bold cursor-pointer">✕</button>
             </div>
