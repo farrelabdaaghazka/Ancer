@@ -12,6 +12,7 @@ export default function LandingPage() {
   const [stationOrigin, setStationOrigin] = useState("");
   const [stationDest, setStationDest] = useState("");
   const [openFaq, setOpenFaq] = useState(null);
+  const [emailInput, setEmailInput] = useState("");
 
   const content = {
     id: {
@@ -24,6 +25,8 @@ export default function LandingPage() {
       placeholderOrigin: "Misal: Stasiun Sudirman",
       placeholderDest: "Misal: Halte Kota Tua",
       btnSearch: "Cari Rute Terbaik",
+      statCommuters: "Komuter Aktif",
+      statCoordinates: "Koordinat Diperbarui",
       hiwTitle: "Bagaimana ANCER Bekerja?",
       hiwSub: "Tiga langkah mudah menguasai jaringan transportasi publik Jakarta tanpa drama tersesat.",
       hiwSteps: [
@@ -46,7 +49,16 @@ export default function LandingPage() {
         { q: "Apakah data jadwal dan tarif di ANCER bersifat real-time?", a: "Ya, ANCER terintegrasi langsung dengan API data terbuka milik otoritas transportasi Jakarta untuk menyajikan jadwal kedatangan dan kalkulasi tarif paling mutakhir." },
         { q: "Apakah platform ini ramah untuk wisatawan asing?", a: "Sangat ramah. Dengan dukungan sistem dwi-bahasa (ID/EN) penuh dan peta rute visual yang intuitif, turis asing dapat menjelajahi Jakarta layaknya warga lokal." },
         { q: "Bagaimana cara kerja fitur Mobility Ledger?", a: "Setelah masuk ke akun Anda, Ledger akan merekam rute yang Anda pilih dan menghitung pengeluaran ongkosnya secara otomatis ke dalam dasbor finansial pribadi Anda." }
-      ]
+      ],
+      ctaTitle: "Kuasai Mobilitas Urban Jakarta Sekarang",
+      ctaSub: "Bergabunglah dengan ribuan komuter cerdas lainnya dan rasakan kemudahan transit multi-moda tanpa kendala.",
+      ctaBtn: "Mulai Perjalanan Gratis",
+      footerDesc: "Platform kecerdasan spasial dan transparansi biaya transportasi publik modern terintegrasi untuk wilayah metropolitan Jakarta.",
+      footerCol1: "Perusahaan",
+      footerCol2: "Produk",
+      footerCol3: "Newsletter",
+      newsPlaceholder: "Masukkan alamat email Anda",
+      newsBtn: "Langganan"
     },
     en: {
       badge: "Unified Jakarta Transit Navigation Platform",
@@ -58,6 +70,8 @@ export default function LandingPage() {
       placeholderOrigin: "e.g., Sudirman Station",
       placeholderDest: "e.g., Kota Tua Stop",
       btnSearch: "Find Best Route",
+      statCommuters: "Active Commuters",
+      statCoordinates: "Coordinates Updated",
       hiwTitle: "How ANCER Works",
       hiwSub: "Three simple steps to master Jakarta's public transportation network without getting lost.",
       hiwSteps: [
@@ -80,7 +94,16 @@ export default function LandingPage() {
         { q: "Is the schedule and fare data on ANCER real-time?", a: "Yes, ANCER integrates directly with Jakarta transit authority open data APIs to deliver up-to-date arrival timetables and fare calculations." },
         { q: "Is this platform foreigner-friendly?", a: "Absolutely. With full bilingual (ID/EN) support and intuitive visual route structures, international tourists can navigate Jakarta like a local." },
         { q: "How does the Mobility Ledger feature work?", a: "Once logged into your account, the Ledger automatically records your chosen routes and logs the fare expenses into a personalized financial dashboard." }
-      ]
+      ],
+      ctaTitle: "Master Jakarta’s Urban Mobility Today",
+      ctaSub: "Join thousands of smart commuters and experience seamless multi-modal transit without friction.",
+      ctaBtn: "Start Journey Free",
+      footerDesc: "Integrated spatial intelligence and public transit cost transparency platform engineered modernly for the Jakarta metropolitan area.",
+      footerCol1: "Company",
+      footerCol2: "Product",
+      footerCol3: "Newsletter",
+      newsPlaceholder: "Enter your email address",
+      newsBtn: "Subscribe"
     }
   };
 
@@ -98,7 +121,6 @@ export default function LandingPage() {
       
       <nav className="fixed top-0 left-0 right-0 z-50 h-[80px] bg-[#F8F9FD]/80 backdrop-blur-md border-b border-[#18102B]/5">
         <div className="max-w-7xl mx-auto flex items-center justify-between h-full px-6 md:px-12">
-          
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
             <img src={ancerLogo} alt="ANCER Logo" className="w-9 h-9 object-contain" />
             <span className="font-black text-[22px] tracking-tight text-[#18102B]">ANCER</span>
@@ -262,7 +284,7 @@ export default function LandingPage() {
       </section>
 
       <section className="bg-[#FAFAFE] border-t border-[#18102B]/5 py-20 px-6 text-left">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-5xl mx-auto mb-20">
           <div className="bg-white border border-[#18102B]/5 rounded-3xl p-8 md:p-12 shadow-sm flex flex-col md:flex-row gap-8 items-start">
             <div className="flex items-center gap-3 shrink-0">
               <div className="w-2 h-6 bg-[#834DFB] rounded-full"></div>
@@ -273,6 +295,73 @@ export default function LandingPage() {
             </p>
           </div>
         </div>
+
+        <div className="max-w-7xl mx-auto px-6 md:px-12 mb-20">
+          <div className="w-full rounded-3xl bg-gradient-to-r from-[#834DFB] to-[#632bd6] p-8 md:p-14 text-white flex flex-col md:flex-row justify-between items-center gap-8 shadow-xl">
+            <div className="text-left max-w-xl">
+              <h2 className="text-2xl md:text-4xl font-black tracking-tight mb-3 leading-tight">{currentContent.ctaTitle}</h2>
+              <p className="text-white/80 text-sm font-medium leading-relaxed">{currentContent.ctaSub}</p>
+            </div>
+            <Link to="/login" className="bg-white text-[#834DFB] hover:bg-[#FAFAFA] font-black text-sm px-8 py-4 rounded-xl shadow-lg transition-all shrink-0">
+              {currentContent.ctaBtn}
+            </Link>
+          </div>
+        </div>
+
+        <footer className="max-w-7xl mx-auto px-6 md:px-12 pt-8 border-t border-[#18102B]/5 grid grid-cols-1 md:grid-cols-4 gap-10 text-xs text-[#18102B]/60">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <img src={ancerLogo} alt="ANCER Logo" className="w-6 h-6 object-contain" />
+              <span className="font-black text-lg text-[#18102B]">ANCER</span>
+            </div>
+            <p className="leading-relaxed font-medium">{currentContent.footerDesc}</p>
+          </div>
+
+          <div className="space-y-3 md:pl-10">
+            <h4 className="font-black text-sm text-[#18102B]">{currentContent.footerCol1}</h4>
+            <ul className="space-y-2 font-semibold">
+              <li><button onClick={() => window.scrollTo({top:0, behavior:'smooth'})} className="hover:text-[#834DFB] cursor-pointer">Home</button></li>
+              <li><button onClick={() => scrollToSection("how-it-works")} className="hover:text-[#834DFB] cursor-pointer">About Us</button></li>
+              <li><button onClick={() => scrollToSection("faq-section")} className="hover:text-[#834DFB] cursor-pointer">FAQ</button></li>
+            </ul>
+          </div>
+
+          <div className="space-y-3">
+            <h4 className="font-black text-sm text-[#18102B]">{currentContent.footerCol2}</h4>
+            <ul className="space-y-2 font-semibold">
+              <li><Link to="/login" className="hover:text-[#834DFB]">Route Builder</Link></li>
+              <li><Link to="/login" className="hover:text-[#834DFB]">Live Radar</Link></li>
+              <li><Link to="/login" className="hover:text-[#834DFB]">Mobility Ledger</Link></li>
+            </ul>
+          </div>
+
+          <div className="space-y-3">
+            <h4 className="font-black text-sm text-[#18102B]">{currentContent.footerCol3}</h4>
+            <div className="flex flex-col gap-2">
+              <input 
+                type="email" 
+                placeholder={currentContent.newsPlaceholder}
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
+                className="w-full bg-white border border-[#18102B]/10 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#834DFB]"
+              />
+              <button 
+                onClick={() => { setEmailInput(""); alert("Subscribed!"); }}
+                className="w-full bg-[#18102B] text-white hover:bg-[#834DFB] rounded-xl py-2.5 font-bold transition-all cursor-pointer"
+              >
+                {currentContent.newsBtn}
+              </button>
+            </div>
+          </div>
+
+          <div className="col-span-1 md:col-span-4 border-t border-[#18102B]/5 pt-6 flex flex-col sm:flex-row justify-between font-bold text-[#18102B]/40 gap-4">
+            <div>© {new Date().getFullYear()} ANCER. All rights reserved.</div>
+            <div className="flex gap-6">
+              <span className="hover:text-[#834DFB] cursor-pointer">Privacy Policy</span>
+              <span className="hover:text-[#834DFB] cursor-pointer">Terms of Service</span>
+            </div>
+          </div>
+        </footer>
       </section>
 
     </div>
