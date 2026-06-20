@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import LiveRadar from "./pages/LiveRadar";
+import MobilityLedger from "./pages/MobilityLedger";
 import Sidebar from "./components/Sidebar";
 
 function DashboardLayout({ children }) {
@@ -46,9 +47,7 @@ export default function App() {
           path="/ledger" 
           element={
             <DashboardLayout>
-              <div className="flex-1 flex items-center justify-center font-bold text-gray-400">
-                Mobility Ledger Financial Vault Coming Soon
-              </div>
+              <MobilityLedger />
             </DashboardLayout>
           } 
         />
