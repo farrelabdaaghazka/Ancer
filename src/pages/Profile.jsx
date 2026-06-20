@@ -8,7 +8,8 @@ import {
   CheckCircle2, 
   XCircle, 
   RefreshCw,
-  Plus
+  Plus,
+  ArrowUpRight
 } from "lucide-react";
 
 export default function Profile() {
@@ -27,10 +28,10 @@ export default function Profile() {
   });
 
   const [transitApps, setTransitApps] = useState([
-    { id: "mrt", name: "MyMRT (MRT Jakarta)", status: "Connected", account: "abda@mrt-passenger.id", balance: "Rp45.000" },
-    { id: "krl", name: "C-Access (KRL Commuter)", status: "Connected", account: "+6281234567890", balance: "Rp12.000" },
+    { id: "mrt", name: "MyMRT Jakarta", status: "Connected", account: "abda@mrt-passenger.id", balance: "45.000" },
+    { id: "krl", name: "C-Access KRL", status: "Connected", account: "+6281234567890", balance: "12.000" },
     { id: "lrt", name: "LRT Jabodebek Hub", status: "Disconnected", account: "—", balance: "—" },
-    { id: "jaklingko", name: "JakLingko SuperApp", status: "Connected", account: "abda.aghazka@jaklingko.ch", balance: "Rp27.500" }
+    { id: "jaklingko", name: "JakLingko SuperApp", status: "Connected", account: "abda.aghazka@jaklingko.ch", balance: "27.500" }
   ]);
 
   const [smartCards, setSmartCards] = useState([
@@ -53,7 +54,7 @@ export default function Profile() {
           ...app,
           status: isConnected ? "Disconnected" : "Connected",
           account: isConnected ? "—" : "abda.sync@ancer.id",
-          balance: isConnected ? "—" : "Rp50.000"
+          balance: isConnected ? "—" : "50.000"
         };
       }
       return app;
@@ -91,13 +92,13 @@ export default function Profile() {
               onClick={() => setActiveTab("cards")}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === "cards" ? "bg-[#834DFB] text-white" : "text-gray-400 hover:text-white hover:bg-white/5"}`}
             >
-              <CreditCard size={14} /> Smart Cards & Payment
+              <CreditCard size={14} /> Smart Cards Ledger
             </button>
             <button
               onClick={() => setActiveTab("integrations")}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === "integrations" ? "bg-[#834DFB] text-white" : "text-gray-400 hover:text-white hover:bg-white/5"}`}
             >
-              <Link2 size={14} /> Transit App Sync
+              <Link2 size={14} /> Ecosystem Sync
             </button>
           </div>
 
@@ -215,14 +216,14 @@ export default function Profile() {
                 <div className="flex justify-between items-center pb-4 border-b border-white/5">
                   <div>
                     <h3 className="text-base font-black text-white tracking-tight">Electronic Money Ledger</h3>
-                    <p className="text-xs text-gray-400">Manajemen nomor NFC kartu fisik untuk sinkronisasi pelacakan saldo otomatis.</p>
+                    <p className="text-xs text-gray-400">Kelola nomor NFC kartu fisik untuk pemindaian gate saldo otomatis.</p>
                   </div>
                   <button className="p-2 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all">
                     <Plus size={14} />
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {smartCards.map(card => {
                     const isFlazz = card.type.includes("Flazz");
                     const isEmoney = card.type.includes("e-Money");
@@ -296,7 +297,7 @@ export default function Profile() {
               <div className="space-y-6 animate-fadeIn text-left">
                 <div>
                   <h3 className="text-base font-black text-white tracking-tight">Transit Application Ecosystem</h3>
-                  <p className="text-xs text-gray-400">Sinkronisasikan akun aplikasi resmi angkutan Jakarta untuk otomasi data travel voucher.</p>
+                  <p className="text-xs text-gray-400">Otomatisasikan penarikan data travel voucher harian lewat sinkronisasi akun resmi operator.</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -305,45 +306,49 @@ export default function Profile() {
                     return (
                       <div 
                         key={app.id} 
-                        style={{ borderColor: isConnected ? "rgba(131, 77, 251, 0.2)" : "rgba(255, 255, 255, 0.05)" }}
-                        className={`p-5 rounded-2xl border bg-[#110c1b] flex flex-col justify-between min-h-[160px] transition-all duration-300 relative ${isConnected ? "shadow-[0_4px_20px_rgba(131,77,251,0.04)]" : ""}`}
+                        style={{ borderColor: isConnected ? "rgba(131, 77, 251, 0.15)" : "rgba(255, 255, 255, 0.05)" }}
+                        className={`p-6 rounded-2xl border transition-all duration-300 flex flex-col justify-between h-48 ${isConnected ? "bg-white/[0.02] border-white/10 shadow-sm" : "bg-white/[0.01] border-white/5 opacity-60"}`}
                       >
-                        <div className="flex justify-between items-start gap-2 w-full">
-                          <div className="flex items-center gap-3 min-w-0">
-                            <div className={`w-8 h-8 rounded-xl flex items-center justify-center border shrink-0 ${isConnected ? "bg-[#834DFB]/10 border-[#834DFB]/20 text-[#834DFB]" : "bg-white/5 border-white/10 text-gray-500"}`}>
-                              <Link2 size={14} />
+                        <div className="flex justify-between items-start w-full">
+                          <div className="flex items-center gap-3.5 min-w-0">
+                            <div className={`w-9 h-9 rounded-xl flex items-center justify-center border shrink-0 ${isConnected ? "bg-[#834DFB]/10 border-[#834DFB]/20 text-[#834DFB]" : "bg-white/5 border-white/5 text-gray-600"}`}>
+                              <Link2 size={15} />
                             </div>
                             <div className="min-w-0">
-                              <h4 className="text-xs font-black text-white tracking-tight truncate whitespace-nowrap">{app.name}</h4>
-                              <p className="text-[10px] font-mono text-gray-400 truncate max-w-[140px] mt-0.5">{isConnected ? app.account : "Not Synced"}</p>
+                              <h4 className="text-sm font-black text-white tracking-tight truncate">{app.name}</h4>
+                              <p className="text-[10px] font-mono text-gray-400 truncate max-w-[150px] mt-0.5">{isConnected ? app.account : "Disintegrated Account"}</p>
                             </div>
                           </div>
                           
-                          <div className="flex items-center gap-1.5 shrink-0">
-                            <span className={`w-1.5 h-1.5 rounded-full ${isConnected ? "bg-[#22c55e]" : "bg-gray-500"}`} />
-                            <span className={`text-[9px] font-black tracking-wide ${isConnected ? "text-[#22c55e]" : "text-gray-500"} uppercase`}>
-                              {app.status}
-                            </span>
+                          <div className={`text-[9px] font-black px-2 py-0.5 rounded-full tracking-wide ${isConnected ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-white/5 text-gray-500 border border-white/5"}`}>
+                            {isConnected ? "ACTIVE" : "OFFLINE"}
                           </div>
                         </div>
 
-                        <div className="my-3 flex items-center h-6">
-                          {isConnected ? (
-                            <div className="flex items-baseline gap-1.5 bg-[#834DFB]/5 border border-[#834DFB]/10 rounded-xl px-2.5 py-1">
-                              <span className="text-xs font-black text-[#F0E100]">{app.balance}</span>
-                              <span className="text-[8px] font-bold text-gray-400 uppercase tracking-wider">Digital Wallet</span>
+                        <div className="flex items-center justify-between pt-2">
+                          <div>
+                            <span className="text-[8px] font-black text-gray-500 uppercase tracking-wider block">Wallet Balance</span>
+                            <span className={`text-xl font-black tracking-tight ${isConnected ? "text-white" : "text-gray-600 font-medium text-sm"}`}>
+                              {isConnected ? `Rp${app.balance}` : "—"}
+                            </span>
+                          </div>
+                          {isConnected && (
+                            <div className="flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/5 px-2 py-0.5 rounded border border-emerald-500/10 shadow-sm">
+                              <span>Synced</span>
                             </div>
-                          ) : (
-                            <span className="text-[10px] text-gray-500 italic font-medium pl-1">Awaiting authorization…</span>
                           )}
                         </div>
 
-                        <div className="pt-2.5 border-t border-white/5 w-full">
+                        <div className="pt-4 border-t border-white/5 w-full flex items-center justify-between gap-4">
+                          <span className="text-[9px] text-gray-500 font-bold tracking-wide uppercase flex items-center gap-1">
+                            {isConnected ? "Auto Voucher Enabled" : "Manual Sync"}
+                          </span>
                           <button
                             onClick={() => toggleAppConnect(app.id)}
-                            className={`w-full py-2 rounded-xl text-[11px] font-bold border transition-all cursor-pointer text-center ${isConnected ? "bg-white/5 border-white/10 text-red-400 hover:bg-red-500/10 hover:border-red-500/20" : "bg-[#834DFB] border-transparent text-white hover:bg-[#723ee3]"}`}
+                            className={`text-[11px] font-black tracking-tight transition-all cursor-pointer flex items-center gap-1 py-1 px-2 rounded-lg ${isConnected ? "text-red-400/80 hover:text-red-400 bg-red-500/5 hover:bg-red-500/10 border border-red-500/10" : "text-[#834DFB] hover:text-[#723ee3]"}`}
                           >
-                            {isConnected ? "Disconnect Account" : "Authorize Connection"}
+                            <span>{isConnected ? "Disconnect" : "Authorize"}</span>
+                            {!isConnected && <ArrowUpRight size={12} />}
                           </button>
                         </div>
                       </div>
