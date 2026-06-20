@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import LandingPage from "./pages/LandingPage";
 import LiveRadar from "./pages/LiveRadar";
 import MobilityLedger from "./pages/MobilityLedger";
+import LoginPage from "./pages/AuthGate";
 import Sidebar from "./components/Sidebar";
 
 function DashboardLayout({ children }) {
@@ -21,7 +22,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         
-        <Route path="/login" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/login" element={<LoginPage />} />
         
         <Route 
           path="/dashboard" 
