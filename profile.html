@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - Jakarta Commuter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-[#0b0813] text-white font-sans min-h-screen p-4 md:p-10 flex justify-center items-start">
+
+    <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        <div class="lg:col-span-1 flex flex-col gap-6">
+            <div class="bg-[#140e28] border border-[#231a3d] rounded-2xl p-5 flex flex-col items-center text-center shadow-xl">
+                <div class="w-20 h-20 rounded-full bg-[#3d2a75] flex items-center justify-center text-4xl shadow-inner mb-3">
+                    🚆
+                </div>
+                <h2 class="text-lg font-bold text-white tracking-wide">Jakarta Commuter</h2>
+                <p class="text-[#8477b9] text-xs">commuter@ancer.id</p>
+                <span class="inline-block bg-[#2d1b61] text-[#9b86ec] text-[10px] font-bold tracking-wider px-2.5 py-0.5 rounded-md mt-2 uppercase">
+                    Pro Plan
+                </span>
+            </div>
+
+            <nav class="bg-[#140e28] border border-[#231a3d] rounded-2xl p-4 shadow-xl flex flex-col gap-1">
+                <p class="text-[10px] uppercase tracking-widest text-[#564993] font-bold px-3 mb-2">Menu Utama</p>
+                
+                <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-xl bg-[#231a3d] text-white text-sm font-semibold transition-all">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="layout-dashboard" class="w-4 h-4 text-[#7c5cff]"></i>
+                        <span>Ringkasan Akun</span>
+                    </div>
+                </a>
+            </nav>
+        </div>
+
+        <div class="lg:col-span-3 flex flex-col gap-6">
+            
+            <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-[#6355a4]">Akun Anda</span>
+                <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight mt-1 text-gray-100">Ringkasan Aktivitas</h1>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-[#140e28] border border-[#231a3d] rounded-2xl p-6 text-center flex flex-col items-center justify-center min-h-[150px] shadow-lg">
+                    <div class="text-[#7c5cff] mb-2"><i data-lucide="trending-up" class="w-5 h-5"></i></div>
+                    <div class="text-2xl font-extrabold text-white">147</div>
+                    <div class="text-[#7a6fa6] text-[11px] font-semibold mt-1 uppercase tracking-wider">Total Perjalanan</div>
+                </div>
+
+                <div class="bg-[#140e28] border border-[#231a3d] rounded-2xl p-6 text-center flex flex-col items-center justify-center min-h-[150px] shadow-lg">
+                    <div class="text-[#eab308] mb-2"><i data-lucide="clock" class="w-5 h-5"></i></div>
+                    <div class="text-2xl font-extrabold text-white">23.4j</div>
+                    <div class="text-[#7a6fa6] text-[11px] font-semibold mt-1 uppercase tracking-wider">Waktu Dihemat</div>
+                </div>
+
+                <div class="bg-[#140e28] border border-[#231a3d] rounded-2xl p-6 text-center flex flex-col items-center justify-center min-h-[150px] shadow-lg">
+                    <div class="text-[#22c55e] mb-2"><i data-lucide="wallet" class="w-5 h-5"></i></div>
+                    <div class="text-2xl font-extrabold text-white">Rp187.500</div>
+                    <div class="text-[#7a6fa6] text-[11px] font-semibold mt-1 uppercase tracking-wider">Ongkos Hemat</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
