@@ -3,6 +3,7 @@ import LandingPage from "./pages/LandingPage";
 import LiveRadar from "./pages/LiveRadar";
 import Sidebar from "./components/Sidebar";
 import Profile from "./pages/Profile";
+import RouteBuilder from "./pages/RouteBuilder"; 
 
 function DashboardLayout({ children }) {
   return (
@@ -30,6 +31,15 @@ export default function App() {
               <div className="flex-1 flex items-center justify-center font-bold text-gray-400">
                 Dashboard Overview Module Coming Soon
               </div>
+            </DashboardLayout>
+          } 
+        />
+        
+        <Route 
+          path="/route-builder" 
+          element={
+            <DashboardLayout>
+              <RouteBuilder />
             </DashboardLayout>
           } 
         />
