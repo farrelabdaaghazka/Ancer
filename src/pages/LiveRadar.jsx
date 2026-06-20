@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Search, X, Navigation, MapPin, AlertTriangle, Map } from "lucide-react";
+import { Search, X, Navigation, MapPin, AlertTriangle, Eye } from "lucide-react";
 
 const ROUTING_SCHEMA = {
   MRT: {
@@ -25,9 +25,12 @@ const ROUTING_SCHEMA = {
       { name: "Haji Nawi", coords: [-6.2621, 106.7997] },
       { name: "Blok A", coords: [-6.2550, 106.7998] },
       { name: "Blok M Transit", coords: [-6.2446, 106.8006] },
-      { name: "Sisingamangaraja", coords: [-6.2365, 106.8015] },
-      { name: "Senayan", coords: [-6.2277, 106.8024] },
-      { name: "ISTN", coords: [-6.2215, 106.8032] },
+      { name: "ASEAN", coords: [-6.2365, 106.8015] },
+      { name: "Senayan Bank DKI", coords: [-6.2277, 106.8024] },
+      { name: "Istora Mandiri", coords: [-6.2215, 106.8112] },
+      { name: "Bendungan Hilir", coords: [-6.2114, 106.8178] },
+      { name: "Setiabudi Astra", coords: [-6.2038, 106.8224] },
+      { name: "Dukuh Atas BNI", coords: [-6.1982, 106.8228] },
       { name: "Bundaran HI", coords: [-6.1950, 106.8231] }
     ]
   },
@@ -43,7 +46,7 @@ const ROUTING_SCHEMA = {
     delayMessage: "Advisory: LRT Bekasi Line technical adjustment near Cawang.",
     onScheduleLabel: "ON TRACK",
     onScheduleColor: "#22c55e",
-    mapCenter: [-6.2431, 106.8624],
+    mapCenter: [-6.2425, 106.8482],
     mapZoom: 14,
     stations: [
       { name: "Jatimulya", coords: [-6.2572, 107.0182] },
@@ -223,7 +226,7 @@ export default function LiveRadar() {
       }
     });
 
-    const targetCenter = radarState === "active" ? data.stations[currentIdx].coords : data.mapCenter;
+    const targetCenter = data.stations[currentIdx]?.coords ?? data.mapCenter;
     const targetZoom = radarState === "active" ? 15 : data.mapZoom;
     mapRef.current.flyTo(targetCenter, targetZoom, { animate: true, duration: 1.0 });
 
@@ -256,6 +259,20 @@ export default function LiveRadar() {
           70%  { transform: scale(3.5); opacity: 0; }
           100% { transform: scale(1);   opacity: 0; }
         }
+        .custom-scrollbar::-webkit-scrollbar {
+          height: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.02);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.12);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #834DFB;
+        }
       `}</style>
 
       <div className="flex justify-between items-start mb-6 shrink-0 z-10">
@@ -284,10 +301,19 @@ export default function LiveRadar() {
         {radarState === "active" && (
           <div className="w-full md:w-[350px] bg-[#1a1625] border-r border-white/5 flex flex-col justify-between p-6 shrink-0 z-20 animate-fadeIn overflow-y-auto">
             <div className="space-y-6">
-              <div>
-                <div style={{ color: color }} className="text-[10px] font-extrabold tracking-wider mb-3">CHECKPOINT STATUS</div>
-                <div className="text-xs text-gray-400 mb-1">Active Hub</div>
-                <div className="text-xl font-black text-white tracking-tight leading-tight">{displayActiveStation}</div>
+              <div className="flex justify-between items-start">
+                <div>
+                  <div style={{ color: color }} className="text-[10px] font-extrabold tracking-wider mb-2">CHECKPOINT STATUS</div>
+                  <div className="text-xs text-gray-400 mb-1">Active Hub</div>
+                  <div className="text-xl font-black text-white tracking-tight leading-tight">{displayActiveStation}</div>
+                </div>
+                <button 
+                  onClick={() => setRadarState("search")}
+                  className="p-2 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+                  title="Return to Map"
+                >
+                  <Eye size={14} />
+                </button>
               </div>
 
               <div className="space-y-4 border-y border-white/5 py-5 text-xs">
@@ -304,6 +330,22 @@ export default function LiveRadar() {
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400">Remaining Tracker</span>
                   <span className="font-bold text-white">{displayRemaining}</span>
+                </div>
+              </div>
+
+              <div className="bg-[#110c1b]/60 border border-white/5 rounded-2xl p-4 space-y-3.5 animate-fadeIn">
+                <div className="text-[9px] font-black text-gray-500 tracking-wider uppercase">Live Fleet Intelligence</div>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-gray-400">Armada ID</span>
+                  <span className="font-bold text-gray-200 uppercase tracking-wide">{scenario}-{Math.floor(100 + Math.random() * 900)}</span>
+                </div>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-gray-400">Velocity</span>
+                  <span className="font-extrabold text-[#22c55e]">{isAtTerminus ? "0 km/h" : `${Math.floor(65 + Math.random() * 20)} km/h`}</span>
+                </div>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-gray-400">Gerbong Density</span>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#834DFB]/10 text-[#834DFB] border border-[#834DFB]/20">MODERATE</span>
                 </div>
               </div>
             </div>
@@ -427,39 +469,52 @@ export default function LiveRadar() {
           )}
 
           {radarState === "active" && (
-            <div className="absolute bottom-5 left-6 right-6 bg-[#110c1be6] border border-white/5 rounded-2xl p-5 backdrop-blur-md z-[1000] shadow-xl animate-fadeIn text-left">
+            <div className="absolute bottom-5 left-6 right-6 bg-[#110c1be6] border border-white/5 rounded-2xl p-5 pb-7 backdrop-blur-md z-[1000] shadow-xl animate-fadeIn text-left">
               <div style={{ color: `${color}cc` }} className="text-[9px] font-black tracking-widest mb-4 uppercase">{data.lineName}</div>
-              <div className="relative w-full flex items-center justify-between">
-                <div className="absolute h-[2px] inset-x-0 top-1/2 -translate-y-1/2 bg-white/10 z-0" />
+              
+              <div className="w-full overflow-x-auto pb-3 custom-scrollbar">
                 <div 
-                  style={{ background: color, width: `${progressFraction * 100}%` }} 
-                  className="absolute h-[2px] left-0 top-1/2 -translate-y-1/2 z-0 transition-all duration-500" 
-                />
-                {data.stations.map((st, i) => {
-                  const isActive = i === currentIdx;
-                  const isPast = i < currentIdx;
-                  return (
-                    <div key={i} className="flex flex-col items-center relative z-10 flex-1">
-                      {isActive ? (
-                        <div className="relative flex items-center justify-center">
-                          <div style={{ background: `radial-gradient(circle, ${color}55, transparent)` }} className="absolute w-10 h-10 rounded-full" />
-                          <div style={{ background: color, borderColor: color }} className="w-4 h-4 rounded-full border-4 z-10 shadow-lg" />
+                  style={{ width: `${Math.max(100, data.stations.length * 95)}px` }} 
+                  className="relative flex items-center justify-between px-6 my-4 h-16"
+                >
+                  <div className="absolute h-[2px] left-6 right-6 top-1/2 -translate-y-1/2 bg-white/10 z-0" />
+                  <div 
+                    style={{ 
+                      background: color, 
+                      width: `calc(${(currentIdx / lastStationIdx) * 100}% - 12px)` 
+                    }} 
+                    className="absolute h-[2px] left-6 top-1/2 -translate-y-1/2 z-0 transition-all duration-500" 
+                  />
+
+                  {data.stations.map((st, i) => {
+                    const isActive = i === currentIdx;
+                    const isPast = i < currentIdx;
+                    return (
+                      <div key={i} className="flex flex-col items-center relative z-10 w-16">
+                        {isActive ? (
+                          <div className="relative flex items-center justify-center">
+                            <div style={{ background: `radial-gradient(circle, ${color}55, transparent)` }} className="absolute w-10 h-10 rounded-full" />
+                            <div style={{ background: color, borderColor: color }} className="w-4 h-4 rounded-full border-4 z-10 shadow-lg" />
+                          </div>
+                        ) : (
+                          <div 
+                            style={{ borderColor: isPast ? "transparent" : `${color}60`, background: isPast ? "#341F60" : "#110c1b" }} 
+                            className={`w-3 h-3 rounded-full ${isPast ? "" : "border-2"}`}
+                          />
+                        )}
+                        
+                        <div className="absolute top-6 left-1/2 -translate-x-1/2 w-24 text-center overflow-visible">
+                          <div 
+                            style={{ color: isActive ? color : (isPast ? "rgba(245,243,255,0.3)" : "rgba(245,243,255,0.65)") }} 
+                            className={`text-[10px] tracking-tight leading-tight whitespace-normal break-words pt-1.5 ${isActive ? "font-black" : "font-bold"}`}
+                          >
+                            {st.name}
+                          </div>
                         </div>
-                      ) : (
-                        <div 
-                          style={{ borderColor: isPast ? "transparent" : `${color}60`, background: isPast ? "#341F60" : "#110c1b" }} 
-                          className={`w-3 h-3 rounded-full ${isPast ? "" : "border-2"}`}
-                        />
-                      )}
-                      <div 
-                        style={{ color: isActive ? color : (isPast ? "rgba(245,243,255,0.2)" : "rgba(245,243,255,0.5)") }} 
-                        className={`mt-2.5 text-center text-[9px] max-w-[65px] truncate ${isActive ? "font-black" : "font-semibold"}`}
-                      >
-                        {st.name}
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             </div>
           )}
