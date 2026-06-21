@@ -5,6 +5,7 @@ import MobilityLedger from "./pages/MobilityLedger";
 import LoginPage from "./pages/AuthGate";
 import Sidebar from "./components/Sidebar";
 import Profile from "./pages/Profile";
+import RegisterPage from "./pages/Register";
 import RouteBuilder from "./pages/RouteBuilder"; 
 
 function DashboardLayout({ children }) {
@@ -25,6 +26,7 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         
         <Route 
           path="/dashboard" 

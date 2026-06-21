@@ -315,17 +315,15 @@ export default function LoginPage() {
                 </form>
 
                 {/* FOOTER */}
-                <p
-                    class="text-center text-zinc-400 mt-10"
-                >
+                <p class="text-center text-zinc-400 mt-10">
                     New to ANCER?
-
-                    <a
-                        href="#"
-                        class="text-violet-400 font-semibold ml-1"
+                    <button
+                        type="button"
+                        onClick={() => navigate("/register")} // <-- Arahkan dengan benar ke /register
+                        className="text-violet-400 font-semibold ml-1 hover:underline bg-transparent border-none cursor-pointer"
                     >
                         Create Account
-                    </a>
+                    </button>
                 </p>
 
             </div>
