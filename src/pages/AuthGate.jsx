@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ancerLogo from "../assets/logo/ancer logo.png";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -102,21 +103,16 @@ export default function LoginPage() {
             >
 
                 {/* LOGO */}
-                <div class="flex items-center gap-5 mb-10">
+                <div className="flex items-center gap-2 mb-10">
+                    <img 
+                        src={ancerLogo} 
+                        alt="Ancer Logo" 
+                        className="w-14 h-14 object-contain" 
+                    />
 
-                    <div
-                        class="w-14 h-14 rounded-2xl bg-gradient-to-br
-                        from-violet-500 to-purple-700
-                        flex items-center justify-center
-                        shadow-lg shadow-violet-500/30"
-                    >
-                        <span class="text-2xl">⚡</span>
-                    </div>
-
-                    <h1 class="font-bold text-3xl xl:text-4xl">
+                    <h1 className="font-black text-3xl xl:text-4xl tracking-tight">
                         ANCER
                     </h1>
-
                 </div>
 
                 {/* TITLE */}
