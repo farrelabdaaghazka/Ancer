@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ancerLogo from "../assets/logo/ancer logo.png";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -107,19 +108,18 @@ export default function RegisterPage() {
                 className="relative z-10 flex flex-col justify-center px-10 xl:px-16 2xl:px-24 py-12"
             >
                 {/* LOGO */}
-                <div className="flex items-center gap-5 mb-10">
-                    <div
-                        className="w-14 h-14 rounded-2xl bg-gradient-to-br
-                        from-violet-500 to-purple-700
-                        flex items-center justify-center
-                        shadow-lg shadow-violet-500/30"
-                    >
-                        <span className="text-2xl">⚡</span>
-                    </div>
-                    <h1 className="font-bold text-3xl xl:text-4xl">
+            <div className="flex items-center gap-2 mb-10">
+                    <img 
+                        src={ancerLogo} 
+                        alt="Ancer Logo" 
+                        className="w-14 h-14 object-contain" 
+                    />
+
+                    <h1 className="font-black text-3xl xl:text-4xl tracking-tight">
                         ANCER
                     </h1>
                 </div>
+
 
                 {/* TITLE */}
                 <h2
@@ -267,7 +267,7 @@ export default function RegisterPage() {
                     {/* BUTTON */}
                     <button
                         type="submit"
-                        className="w-full py-4.5 rounded-3xl font-bold text-base bg-gradient-to-r from-[#7C3AED] to-[#A855F7] hover:opacity-90 transition mt-2"
+                        className="w-full py-5 rounded-3xl font-bold text-lg text-white bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 hover:opacity-95 hover:scale-[1.01] transition-all duration-200 shadow-lg shadow-purple-500/3xl mt-2"
                     >
                         Register →
                     </button>
