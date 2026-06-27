@@ -64,13 +64,15 @@ useEffect(() => {
         {/* CONTENT */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           {/* TRANSACTION HISTORY */}
-          <div className="xl:col-span-2 bg-[#1a1625] rounded-3xl border border-white/5">
-            <div className="p-6 flex justify-between items-center border-b border-white/5">
+          {/* MODIFIKASI: Menggunakan flex-col, membatasi tinggi max di layar besar, dan set overflow */}
+          <div className="xl:col-span-2 bg-[#1a1625] rounded-3xl border border-white/5 flex flex-col xl:max-h-[580px]">
+            <div className="p-6 flex justify-between items-center border-b border-white/5 shrink-0">
               <h2 className="text-2xl font-bold">Transaction History</h2>
               <span className="bg-[#9333ea]/20 text-purple-300 px-4 py-2 rounded-xl text-sm font-medium">7 Trips Logged</span>
             </div>
 
-            <div className="divide-y divide-white/5">
+            {/* MODIFIKASI: Menambahkan overflow-y-auto di sini agar daftar riwayat bisa di-scroll */}
+            <div className="divide-y divide-white/5 overflow-y-auto custom-scrollbar flex-1">
               {[
                 { day: 'Mon 01', route: 'Gambir → Lebak Bulus', mode: 'MRT', fare: 'Rp14.000' },
                 { day: 'Tue 02', route: 'Lebak Bulus → Dukuh Atas', mode: 'MRT', fare: 'Rp14.000' },
@@ -80,9 +82,9 @@ useEffect(() => {
                 { day: 'Sat 06', route: 'Tanah Abang → Sudirman', mode: 'KRL', fare: 'Rp5.000' },
                 { day: 'Sun 07', route: 'Dukuh Atas → Blok M', mode: 'MRT', fare: 'Rp14.000' },
               ].map((trip, idx) => (
-                <div key={idx} className="p-6 flex flex-col md:flex-row justify-between gap-4">
+                <div key={idx} className="p-6 flex flex-col md:flex-row justify-between gap-4 hover:bg-white/[0.01] transition">
                   <div className="flex gap-4">
-                    <div className="bg-[#9333ea]/20 text-purple-300 rounded-2xl p-4 min-w-[90px] text-center font-medium">{trip.day}</div>
+                    <div className="bg-[#9333ea]/20 text-purple-300 rounded-2xl p-4 min-w-[90px] text-center font-medium alignment-fix">{trip.day}</div>
                     <div>
                       <h3 className="font-semibold text-xl">{trip.route}</h3>
                       <p className="text-gray-400">{trip.mode}</p>
@@ -98,107 +100,83 @@ useEffect(() => {
           </div>
 
           {/* DONUT CHART */}
-          <div className="bg-[#1a1625] rounded-3xl p-6 border border-white/5 h-fit">
-            <h2 className="text-2xl font-bold">Spend by Mode</h2>
-            <p className="text-gray-400 mt-1 mb-8">June 2026 Distribution</p>
+          {/* MODIFIKASI: Menghapus h-fit agar tingginya meregang penuh di dalam grid dan menentukan batas tinggi dasar */}
+          <div className="bg-[#1a1625] rounded-3xl p-6 border border-white/5 flex flex-col justify-between min-h-[540px] xl:max-h-[580px]">
+            <div>
+              <h2 className="text-2xl font-bold">Spend by Mode</h2>
+              <p className="text-gray-400 mt-1 mb-6">June 2026 Distribution</p>
 
-            <div className="w-48 h-48 mx-auto relative mb-10 flex items-center justify-center">
-              <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="38"
-                  fill="transparent"
-                  stroke="#1c162a"
-                  strokeWidth="16"
-                />
-                
-                {/* Segment 1: MRT Jakarta (45%) */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="38"
-                  fill="transparent"
-                  stroke="#7c4dff"
-                  strokeWidth="16"
-                  className="transition-all duration-1000 ease-out"
-                  strokeDasharray={isLoaded ? "107.4 238.8" : "0 238.8"} 
-                  strokeDashoffset="0"
-                />
+              <div className="w-48 h-48 mx-auto relative mb-8 flex items-center justify-center">
+                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="38" fill="transparent" stroke="#1c162a" strokeWidth="16" />
+                  
+                  {/* Segment 1: MRT Jakarta (45%) */}
+                  <circle
+                    cx="50" cy="50" r="38" fill="transparent" stroke="#7c4dff" strokeWidth="16"
+                    className="transition-all duration-1000 ease-out"
+                    strokeDasharray={isLoaded ? "107.4 238.8" : "0 238.8"} 
+                    strokeDashoffset="0"
+                  />
 
-                {/* Segment 2: KRL Commuter (24%) */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="38"
-                  fill="transparent"
-                  stroke="#22c55e"
-                  strokeWidth="16"
-                  className="transition-all duration-1000 ease-out"
-                  strokeDasharray={isLoaded ? "57.3 238.8" : "0 238.8"}
-                  strokeDashoffset={isLoaded ? "-107.4" : "0"}
-                />
+                  {/* Segment 2: KRL Commuter (24%) */}
+                  <circle
+                    cx="50" cy="50" r="38" fill="transparent" stroke="#22c55e" strokeWidth="16"
+                    className="transition-all duration-1000 ease-out"
+                    strokeDasharray={isLoaded ? "57.3 238.8" : "0 238.8"}
+                    strokeDashoffset={isLoaded ? "-107.4" : "0"}
+                  />
 
-                {/* Segment 3: TransJakarta (19%) */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="38"
-                  fill="transparent"
-                  stroke="#facc15"
-                  strokeWidth="16"
-                  className="transition-all duration-1000 ease-out"
-                  strokeDasharray={isLoaded ? "45.4 238.8" : "0 238.8"}
-                  strokeDashoffset={isLoaded ? "-164.7" : "0"}
-                />
+                  {/* Segment 3: TransJakarta (19%) */}
+                  <circle
+                    cx="50" cy="50" r="38" fill="transparent" stroke="#facc15" strokeWidth="16"
+                    className="transition-all duration-1000 ease-out"
+                    strokeDasharray={isLoaded ? "45.4 238.8" : "0 238.8"}
+                    strokeDashoffset={isLoaded ? "-164.7" : "0"}
+                  />
 
-                {/* Segment 4: JakLingko (12%) */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="38"
-                  fill="transparent"
-                  stroke="#4a3773"
-                  strokeWidth="16"
-                  className="transition-all duration-1000 ease-out"
-                  strokeDasharray={isLoaded ? "28.7 238.8" : "0 238.8"}
-                  strokeDashoffset={isLoaded ? "-210.1" : "0"}
-                />
-              </svg>
-              <div className="absolute w-[52%] h-[52%] bg-[#1a1625] rounded-full"></div>
-            </div>
+                  {/* Segment 4: JakLingko (12%) */}
+                  <circle
+                    cx="50" cy="50" r="38" fill="transparent" stroke="#4a3773" strokeWidth="16"
+                    className="transition-all duration-1000 ease-out"
+                    strokeDasharray={isLoaded ? "28.7 238.8" : "0 238.8"}
+                    strokeDashoffset={isLoaded ? "-210.1" : "0"}
+                  />
+                </svg>
+                <div className="absolute w-[52%] h-[52%] bg-[#1a1625] rounded-full"></div>
+              </div>
 
-            <div className="space-y-4 text-sm font-medium text-gray-400">
-              {[
-                { name: "MRT Jakarta", percentage: "45%", color: "bg-[#7c4dff]" },
-                { name: "KRL Commuter", percentage: "24%", color: "bg-[#22c55e]" },
-                { name: "TransJakarta", percentage: "19%", color: "bg-[#facc15]" },
-                { name: "JakLingko", percentage: "12%", color: "bg-[#4a3773]" },
-              ].map((item) => (
-                <div key={item.name} className="flex justify-between items-center">
-                  <div className="flex items-center gap-3 w-1/2">
-                    <span className={`w-3 h-3 rounded-md ${item.color}`}></span>
-                    <span className="text-gray-300">{item.name}</span>
-                  </div>
-                  <div className="flex items-center justify-end gap-3 w-1/2">
-                    <span className="font-bold text-white">{item.percentage}</span>
-                    <div className="w-20 bg-[#2d2244] h-1 rounded-full overflow-hidden">
-                      <div
-                        className={`${item.color} h-full rounded-full transition-all duration-1000 ease-out`}
-                        style={{ width: isLoaded ? item.percentage : "0%" }}
-                      ></div>
+              <div className="space-y-3 text-sm font-medium text-gray-400">
+                {[
+                  { name: "MRT Jakarta", percentage: "45%", color: "bg-[#7c4dff]" },
+                  { name: "KRL Commuter", percentage: "24%", color: "bg-[#22c55e]" },
+                  { name: "TransJakarta", percentage: "19%", color: "bg-[#facc15]" },
+                  { name: "JakLingko", percentage: "12%", color: "bg-[#4a3773]" },
+                ].map((item) => (
+                  <div key={item.name} className="flex justify-between items-center">
+                    <div className="flex items-center gap-3 w-1/2">
+                      <span className={`w-3 h-3 rounded-md ${item.color}`}></span>
+                      <span className="text-gray-300">{item.name}</span>
+                    </div>
+                    <div className="flex items-center justify-end gap-3 w-1/2">
+                      <span className="font-bold text-white">{item.percentage}</span>
+                      <div className="w-20 bg-[#2d2244] h-1 rounded-full overflow-hidden">
+                        <div
+                          className={`${item.color} h-full rounded-full transition-all duration-1000 ease-out`}
+                          style={{ width: isLoaded ? item.percentage : "0%" }}
+                        ></div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
 
-            <div className="mt-8 pt-4 border-t border-white/[0.03] flex justify-between items-center text-xs">
+            <div className="mt-6 pt-4 border-t border-white/[0.03] flex justify-between items-center text-xs shrink-0">
               <span className="text-gray-400">Monthly Total</span>
               <span className="font-bold text-[#7c4dff] text-sm">Rp412.000</span>
             </div>
           </div>
+
         </div>
       </main>
 
@@ -208,7 +186,6 @@ useEffect(() => {
   );
 }
 
-// Sub-komponen TripModal agar struktur coding modular
 function TripModal({ onClose }) {
   return (
     <div className="fixed inset-0 bg-[#070412]/85 backdrop-blur-md z-[9999] flex items-center justify-center p-4 overflow-y-auto">
