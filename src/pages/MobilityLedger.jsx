@@ -16,6 +16,25 @@ useEffect(() => {
           0% { transform: scale(0.85) rotate(-90deg); opacity: 0; }
           100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
+
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(147, 51, 234, 0.05);
+          border-radius: 9999px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #4a3773;
+          border-radius: 9999px;
+          transition: background 0.2s ease;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #7c4dff;
+        }
       `}</style>
 
       {/* MAIN CONTENT */}
@@ -64,14 +83,12 @@ useEffect(() => {
         {/* CONTENT */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           {/* TRANSACTION HISTORY */}
-          {/* MODIFIKASI: Menggunakan flex-col, membatasi tinggi max di layar besar, dan set overflow */}
           <div className="xl:col-span-2 bg-[#1a1625] rounded-3xl border border-white/5 flex flex-col xl:max-h-[580px]">
             <div className="p-6 flex justify-between items-center border-b border-white/5 shrink-0">
               <h2 className="text-2xl font-bold">Transaction History</h2>
               <span className="bg-[#9333ea]/20 text-purple-300 px-4 py-2 rounded-xl text-sm font-medium">7 Trips Logged</span>
             </div>
 
-            {/* MODIFIKASI: Menambahkan overflow-y-auto di sini agar daftar riwayat bisa di-scroll */}
             <div className="divide-y divide-white/5 overflow-y-auto custom-scrollbar flex-1">
               {[
                 { day: 'Mon 01', route: 'Gambir → Lebak Bulus', mode: 'MRT', fare: 'Rp14.000' },
@@ -100,7 +117,6 @@ useEffect(() => {
           </div>
 
           {/* DONUT CHART */}
-          {/* MODIFIKASI: Menghapus h-fit agar tingginya meregang penuh di dalam grid dan menentukan batas tinggi dasar */}
           <div className="bg-[#1a1625] rounded-3xl p-6 border border-white/5 flex flex-col justify-between min-h-[540px] xl:max-h-[580px]">
             <div>
               <h2 className="text-2xl font-bold">Spend by Mode</h2>
