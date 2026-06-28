@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import { landingContent } from "../data/landingData";
+import StepCard from "../components/StepCard";
+import FeatureCard from "../components/FeatureCard";
+import FaqItem from "../components/FaqItem";
 import ancerLogo from "../assets/logo/ancer logo.png";
 import logoJl from "../assets/logo/2560x1866-Cerita-JLI.png";
 import logoMrt from "../assets/logo/MRT_Jakarta_(logo_only).svg.png";
@@ -8,106 +11,24 @@ import logoTj from "../assets/logo/TransJakarta_Logo_(cropped).svg.png";
 import logoLrt from "../assets/logo/Jabodebek_LRT.svg.png";
 
 export default function LandingPage() {
+  const navigate = useNavigate();
   const [lang, setLang] = useState("id");
   const [stationOrigin, setStationOrigin] = useState("");
   const [stationDest, setStationDest] = useState("");
   const [openFaq, setOpenFaq] = useState(null);
   const [emailInput, setEmailInput] = useState("");
 
-  const content = {
-    id: {
-      badge: "Platform Integrasi Navigasi Transum Jakarta",
-      headline01: "Navigasi Transit Jakarta.",
-      headline02: "Tanpa Teka-Teki.",
-      subHeadline: "Satu engine terpadu untuk kalkulasi tarif multi-moda, peta radar interaktif, dan pelacakan pengeluaran otomatis. Dirancang presisi untuk mempermudah mobilitas harian komuter urban dan wisatawan asing.",
-      labelOrigin: "Titik Keberangkatan (Stasiun/Halte)",
-      labelDest: "Titik Tujuan (Stasiun/Halte)",
-      placeholderOrigin: "Misal: Stasiun Sudirman",
-      placeholderDest: "Misal: Halte Kota Tua",
-      btnSearch: "Cari Rute Terbaik",
-      statCommuters: "Komuter Aktif",
-      statCoordinates: "Koordinat Diperbarui",
-      hiwTitle: "Bagaimana ANCER Bekerja?",
-      hiwSub: "Tiga langkah mudah menguasai jaringan transportasi publik Jakarta tanpa drama tersesat.",
-      hiwSteps: [
-        { no: "1", title: "Tentukan Tujuan", desc: "Masukkan lokasi asal dan tujuan Anda. ANCER memproses seluruh jaringan MRT, LRT, KRL, dan TransJakarta secara simultan." },
-        { no: "2", title: "Bandingkan Tarif & Waktu", desc: "Dapatkan kalkulasi biaya akurat beserta kombinasi moda tercepat yang disesuaikan dengan anggaran dan waktu Anda." },
-        { no: "3", title: "Mulai Navigasi", desc: "Aktifkan Live Radar untuk memantau posisi armada secara real-time hingga Anda tiba di lokasi tujuan dengan aman." }
-      ],
-      featTitle: "Ekosistem Fitur Utama",
-      featSub: "Didesain khusus untuk menyulap data transit mentah menjadi navigasi intuitif.",
-      features: [
-        { title: "Route Builder", desc: "Merajut integrasi koridor TransJakarta, jalur bawah tanah MRT, hingga Commuter Line dalam satu opsi perjalanan terpadu yang logis." },
-        { title: "Live Radar", desc: "Pantau koordinat GPS aktual pergerakan armada terdekat. Ketahui estimasi kedatangan (ETA) secara presisi langsung dari genggaman." },
-        { title: "Mobility Ledger", desc: "Pencatatan otomatis akumulasi biaya perjalanan bulanan. Membantu komuter menghemat pengeluaran dan turis mengelola travel budget." }
-      ],
-      missionTitle: "Misi Utama ANCER Engine",
-      missionDesc: "Kami hadir untuk menghapus fragmentasi informasi transportasi publik di Jakarta. Dengan menyatukan intelijen spasial dan transparansi tarif harian, ANCER berdedikasi membangun kenyamanan mobilitas yang inklusif bagi seluruh warga urban dan wisatawan global.",
-      faqTitle: "Pertanyaan yang Sering Diajukan (FAQ)",
-      faqSub: "Informasi cepat seputar operasional sistem navigasi ANCER.",
-      faqs: [
-        { q: "Apakah data jadwal dan tarif di ANCER bersifat real-time?", a: "Ya, ANCER terintegrasi langsung dengan API data terbuka milik otoritas transportasi Jakarta untuk menyajikan jadwal kedatangan dan kalkulasi tarif paling mutakhir." },
-        { q: "Apakah platform ini ramah untuk wisatawan asing?", a: "Sangat ramah. Dengan dukungan sistem dwi-bahasa (ID/EN) penuh dan peta rute visual yang intuitif, turis asing dapat menjelajahi Jakarta layaknya warga lokal." },
-        { q: "Bagaimana cara kerja fitur Mobility Ledger?", a: "Setelah masuk ke akun Anda, Ledger akan merekam rute yang Anda pilih dan menghitung pengeluaran ongkosnya secara otomatis ke dalam dasbor finansial pribadi Anda." }
-      ],
-      ctaTitle: "Kuasai Mobilitas Urban Jakarta Sekarang",
-      ctaSub: "Bergabunglah dengan ribuan komuter cerdas lainnya dan rasakan kemudahan transit multi-moda tanpa kendala.",
-      ctaBtn: "Mulai Perjalanan Gratis",
-      footerDesc: "Platform kecerdasan spasial dan transparansi biaya transportasi publik modern terintegrasi untuk wilayah metropolitan Jakarta.",
-      footerCol1: "Perusahaan",
-      footerCol2: "Produk",
-      footerCol3: "Newsletter",
-      newsPlaceholder: "Masukkan alamat email Anda",
-      newsBtn: "Langganan"
-    },
-    en: {
-      badge: "Unified Jakarta Transit Navigation Platform",
-      headline01: "Navigate Jakarta’s Transit.",
-      headline02: "Zero Guesswork.",
-      subHeadline: "A unified engine for multi-modal fare calculation, interactive radar mapping, and automated expense logging. Built precisely to simplify mobility for urban commuters and international tourists.",
-      labelOrigin: "Origin Point (Station/Stop)",
-      labelDest: "Destination Point (Station/Stop)",
-      placeholderOrigin: "e.g., Sudirman Station",
-      placeholderDest: "e.g., Kota Tua Stop",
-      btnSearch: "Find Best Route",
-      statCommuters: "Active Commuters",
-      statCoordinates: "Coordinates Updated",
-      hiwTitle: "How ANCER Works",
-      hiwSub: "Three simple steps to master Jakarta's public transportation network without getting lost.",
-      hiwSteps: [
-        { no: "1", title: "Set Your Destination", desc: "Enter your starting point and destination. ANCER instantly processes all MRT, LRT, KRL, and TransJakarta networks simultaneously." },
-        { no: "2", title: "Compare Fares & Time", desc: "Get accurate cost breakdowns and the fastest transit combinations customized to your preferred budget and schedule." },
-        { no: "3", title: "Start Navigating", desc: "Activate the Live Radar to monitor fleet positions in real-time until you safely reach your destination." }
-      ],
-      featTitle: "Core Feature Ecosystem",
-      featSub: "Specially designed to transform raw transit data into highly intuitive navigation.",
-      features: [
-        { title: "Route Builder", desc: "Weaves TransJakarta corridors, underground MRT, and Commuter Lines into a single, logical, integrated travel option." },
-        { title: "Live Radar", desc: "Track actual GPS coordinates of nearby fleets. Get precise Estimated Time of Arrival (ETA) updates right in your hand." },
-        { title: "Automated Mobility Ledger", desc: "Automated monthly transit cost logging. Helps commuters optimize expenses and tourists manage their vacation travel budget." }
-      ],
-      missionTitle: "ANCER Core Mission",
-      missionDesc: "We exist to eliminate the fragmentation of public transit information across Jakarta. By unifying spatial intelligence and daily fare transparency, ANCER is dedicated to building inclusive mobility convenience for all urban citizens and global travelers.",
-      faqTitle: "Frequently Asked Questions (FAQ)",
-      faqSub: "Quick information regarding ANCER navigation system operations.",
-      faqs: [
-        { q: "Is the schedule and fare data on ANCER real-time?", a: "Yes, ANCER integrates directly with Jakarta transit authority open data APIs to deliver up-to-date arrival timetables and fare calculations." },
-        { q: "Is this platform foreigner-friendly?", a: "Absolutely. With full bilingual (ID/EN) support and intuitive visual route structures, international tourists can navigate Jakarta like a local." },
-        { q: "How does the Mobility Ledger feature work?", a: "Once logged into your account, the Ledger automatically records your chosen routes and logs the fare expenses into a personalized financial dashboard." }
-      ],
-      ctaTitle: "Master Jakarta’s Urban Mobility Today",
-      ctaSub: "Join thousands of smart commuters and experience seamless multi-modal transit without friction.",
-      ctaBtn: "Start Journey Free",
-      footerDesc: "Integrated spatial intelligence and public transit cost transparency platform engineered modernly for the Jakarta metropolitan area.",
-      footerCol1: "Company",
-      footerCol2: "Product",
-      footerCol3: "Newsletter",
-      newsPlaceholder: "Enter your email address",
-      newsBtn: "Subscribe"
-    }
-  };
+  const currentContent = landingContent[lang];
 
-  const currentContent = content[lang];
+  const handleSearchRoute = (e) => {
+    e.preventDefault();
+    navigate("/route-builder", { 
+      state: { 
+        origin: stationOrigin, 
+        destination: stationDest 
+      } 
+    });
+  };
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
@@ -150,16 +71,16 @@ export default function LandingPage() {
           <span className="text-[#834DFB] text-xs font-bold uppercase tracking-wider">{currentContent.badge}</span>
         </div>
 
-        <h1 className="text-[38px] sm:text-[50px] md:text-[62px] font-black tracking-[-1.5px] text-[#18102B] leading-[1.08] max-w-4xl text-center mb-6">
+        <h1 className="text-[34px] sm:text-[50px] md:text-[62px] font-black tracking-[-1.5px] text-[#18102B] leading-[1.08] max-w-4xl text-center mb-6">
           {currentContent.headline01}<br /><span className="text-[#834DFB]">{currentContent.headline02}</span>
         </h1>
 
-        <p className="text-[#18102B]/60 text-base md:text-lg font-medium max-w-2xl text-center leading-[1.6] mb-12">
+        <p className="text-[#18102B]/60 text-sm sm:text-base md:text-lg font-medium max-w-2xl text-center leading-[1.6] mb-12">
           {currentContent.subHeadline}
         </p>
 
         <div className="w-full max-w-4xl bg-white rounded-2xl shadow-[0_20px_50px_rgba(24,16_43,0.06)] border border-[#18102B]/5 p-5 md:p-6 mb-16">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+          <form onSubmit={handleSearchRoute} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
             <div className="flex flex-col gap-2 text-left">
               <label className="text-xs font-bold text-[#18102B]/50 uppercase tracking-wider ml-1">{currentContent.labelOrigin}</label>
               <input 
@@ -168,6 +89,7 @@ export default function LandingPage() {
                 value={stationOrigin}
                 onChange={(e) => setStationOrigin(e.target.value)}
                 className="w-full bg-[#FAFAFA] border border-[#18102B]/10 rounded-xl px-4 py-3.5 text-sm font-semibold focus:outline-none focus:border-[#834DFB] transition-colors"
+                required
               />
             </div>
             <div className="flex flex-col gap-2 text-left">
@@ -178,12 +100,16 @@ export default function LandingPage() {
                 value={stationDest}
                 onChange={(e) => setStationDest(e.target.value)}
                 className="w-full bg-[#FAFAFA] border border-[#18102B]/10 rounded-xl px-4 py-3.5 text-sm font-semibold focus:outline-none focus:border-[#834DFB] transition-colors"
+                required
               />
             </div>
-            <Link to="/login" className="w-full bg-[#834DFB] hover:bg-[#723ee3] text-white rounded-xl py-3.5 px-6 font-bold text-sm shadow-md text-center transition-all duration-200">
+            <button 
+              type="submit"
+              className="w-full bg-[#834DFB] hover:bg-[#723ee3] text-white rounded-xl py-3.5 px-6 font-bold text-sm shadow-md text-center transition-all duration-200 cursor-pointer"
+            >
               {currentContent.btnSearch}
-            </Link>
-          </div>
+            </button>
+          </form>
         </div>
       </header>
 
@@ -215,11 +141,12 @@ export default function LandingPage() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {currentContent.hiwSteps.map((step) => (
-            <div key={step.no} className="flex flex-col text-left bg-white border border-[#18102B]/5 p-8 pt-12 rounded-2xl relative shadow-sm min-h-[220px]">
-              <div className="absolute top-4 right-6 text-6xl font-black text-[#834DFB]/10 select-none leading-none">{step.no}</div>
-              <h3 className="text-xl font-extrabold text-[#18102B] mb-3 pr-8 tracking-tight">{step.title}</h3>
-              <p className="text-[#18102B]/60 text-sm leading-relaxed">{step.desc}</p>
-            </div>
+            <StepCard 
+              key={step.no} 
+              no={step.no} 
+              title={step.title} 
+              desc={step.desc} 
+            />
           ))}
         </div>
       </section>
@@ -245,13 +172,12 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {currentContent.features.map((item, idx) => (
-              <div key={idx} className="bg-[#F8F9FD] border border-[#18102B]/5 rounded-2xl p-8 hover:border-[#834DFB] hover:bg-white hover:shadow-xl transition-all duration-300 text-left group">
-                <div className="w-12 h-12 rounded-xl bg-[#834DFB]/5 text-[#834DFB] flex items-center justify-center mb-6 font-black text-base group-hover:bg-[#834DFB] group-hover:text-white transition-all">
-                  {`0${idx + 1}`}
-                </div>
-                <h3 className="text-lg font-bold text-[#18102B] mb-3">{item.title}</h3>
-                <p className="text-[#18102B]/60 text-sm leading-[1.6]">{item.desc}</p>
-              </div>
+              <FeatureCard 
+                key={idx} 
+                idx={idx} 
+                title={item.title} 
+                desc={item.desc} 
+              />
             ))}
           </div>
         </div>
@@ -264,21 +190,13 @@ export default function LandingPage() {
         </div>
         <div className="flex flex-col gap-5">
           {currentContent.faqs.map((faq, index) => (
-            <div key={index} className="bg-white border border-[#18102B]/8 rounded-2xl overflow-hidden transition-all shadow-sm">
-              <button 
-                onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                className="w-full p-6 text-left font-extrabold text-sm sm:text-base flex justify-between items-center gap-4 cursor-pointer hover:bg-[#F8F9FD]/50 transition-colors"
-              >
-                <span className="pr-4">{faq.q}</span>
-                <span className={`text-2xl font-light transition-transform duration-200 shrink-0 leading-none ${openFaq === index ? "rotate-45 text-[#834DFB]" : "rotate-0 text-[#18102B]/30"}`}>+</span>
-              </button>
-              {openFaq === index && (
-                <div className="px-6 pb-6 pt-2 text-xs sm:text-sm text-[#18102B]/60 leading-relaxed text-left animate-fadeIn">
-                  <div className="w-full h-px bg-[#18102B]/5 mb-4"></div>
-                  {faq.a}
-                </div>
-              )}
-            </div>
+            <FaqItem 
+              key={index}
+              question={faq.q}
+              answer={faq.a}
+              isOpen={openFaq === index}
+              onClick={() => setOpenFaq(openFaq === index ? null : index)}
+            />
           ))}
         </div>
       </section>
