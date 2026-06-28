@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { landingContent } from "../data/landingData";
+import { Menu, X } from "lucide-react"; 
 import StepCard from "../components/StepCard";
 import FeatureCard from "../components/FeatureCard";
 import FaqItem from "../components/FaqItem";
@@ -17,6 +18,7 @@ export default function LandingPage() {
   const [stationDest, setStationDest] = useState("");
   const [openFaq, setOpenFaq] = useState(null);
   const [emailInput, setEmailInput] = useState("");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const currentContent = landingContent[lang];
 
@@ -40,9 +42,9 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#F8F9FD] text-[#18102B] font-sans selection:bg-[#834DFB]/20 overflow-x-hidden">
       
-      <nav className="fixed top-0 left-0 right-0 z-50 h-[80px] bg-[#F8F9FD]/80 backdrop-blur-md border-b border-[#18102B]/5">
-        <div className="max-w-7xl mx-auto flex items-center justify-between h-full px-6 md:px-12">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#F8F9FD]/80 backdrop-blur-md border-b border-[#18102B]/5">
+        <div className="max-w-7xl mx-auto flex items-center justify-between h-[80px] px-6 md:px-12">
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => { window.scrollTo({top: 0, behavior: 'smooth'}); setIsMobileMenuOpen(false); }}>
             <img src={ancerLogo} alt="ANCER Logo" className="w-9 h-9 object-contain" />
             <span className="font-black text-[22px] tracking-tight text-[#18102B]">ANCER</span>
           </div>
@@ -54,15 +56,62 @@ export default function LandingPage() {
           </div>
           
           <div className="flex items-center gap-4">
-            <div className="flex items-center bg-[#18102B]/5 rounded-xl p-0.5 border border-[#18102B]/5">
+            <div className="hidden md:flex items-center bg-[#18102B]/5 rounded-xl p-0.5 border border-[#18102B]/5">
               <button onClick={() => setLang("id")} className={`px-2.5 py-1 text-[11px] font-black rounded-lg transition-all cursor-pointer ${lang === "id" ? "bg-white text-[#834DFB] shadow-sm" : "text-[#18102B]/40"}`}>ID</button>
               <button onClick={() => setLang("en")} className={`px-2.5 py-1 text-[11px] font-black rounded-lg transition-all cursor-pointer ${lang === "en" ? "bg-white text-[#834DFB] shadow-sm" : "text-[#18102B]/40"}`}>EN</button>
             </div>
-            <Link to="/login" className="rounded-xl px-5 py-2 text-sm font-bold border border-[#18102B]/15 text-[#18102B] hover:bg-[#18102B] hover:text-white transition-all duration-200">
+            
+            <Link to="/login" className="hidden md:inline-block rounded-xl px-5 py-2 text-sm font-bold border border-[#18102B]/15 text-[#18102B] hover:bg-[#18102B] hover:text-white transition-all duration-200">
               Login
             </Link>
+
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-xl bg-[#18102B]/5 text-[#18102B] hover:bg-[#18102B]/10 transition-all cursor-pointer"
+            >
+              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
           </div>
         </div>
+
+        {isMobileMenuOpen && (
+          <div className="md:hidden bg-[#F8F9FD] border-b border-[#18102B]/5 px-6 py-6 flex flex-col gap-4 shadow-lg animate-fadeIn">
+            <button 
+              onClick={() => { scrollToSection("how-it-works"); setIsMobileMenuOpen(false); }} 
+              className="text-left text-[14px] font-bold text-[#18102B]/60 hover:text-[#834DFB] py-1 transition-colors"
+            >
+              How It Works
+            </button>
+            <button 
+              onClick={() => { scrollToSection("features-showcase"); setIsMobileMenuOpen(false); }} 
+              className="text-left text-[14px] font-bold text-[#18102B]/60 hover:text-[#834DFB] py-1 transition-colors"
+            >
+              Features
+            </button>
+            <button 
+              onClick={() => { scrollToSection("faq-section"); setIsMobileMenuOpen(false); }} 
+              className="text-left text-[14px] font-bold text-[#18102B]/60 hover:text-[#834DFB] py-1 transition-colors"
+            >
+              FAQ
+            </button>
+            
+            <div className="h-px bg-[#18102B]/5 my-1" />
+            
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center bg-[#18102B]/5 rounded-xl p-0.5 border border-[#18102B]/5">
+                <button onClick={() => setLang("id")} className={`px-3 py-1.5 text-[11px] font-black rounded-lg transition-all ${lang === "id" ? "bg-white text-[#834DFB] shadow-sm" : "text-[#18102B]/40"}`}>ID</button>
+                <button onClick={() => setLang("en")} className={`px-3 py-1.5 text-[11px] font-black rounded-lg transition-all ${lang === "en" ? "bg-white text-[#834DFB] shadow-sm" : "text-[#18102B]/40"}`}>EN</button>
+              </div>
+              <Link 
+                to="/login" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="rounded-xl px-5 py-2 text-center text-sm font-bold bg-[#834DFB] text-white hover:bg-[#723ee3] transition-all flex-1 shadow-md"
+              >
+                Login
+              </Link>
+            </div>
+          </div>
+        )}
       </nav>
 
       <header className="pt-[150px] pb-12 px-6 max-w-7xl mx-auto flex flex-col items-center justify-center relative">
