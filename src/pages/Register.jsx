@@ -35,12 +35,14 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row text-white bg-[#0C051F]">
+    <div className="h-screen w-full flex flex-col lg:flex-row text-white bg-[#0C051F] overflow-hidden">
       {/* SEBELAH KIRI: Komponen Side */}
-      <AuthLayoutSide />
+      <div className="w-full lg:w-[60%] h-full hidden lg:block">
+        <AuthLayoutSide />
+      </div>
 
       {/* SEBELAH KANAN: Form Menu Registrasi */}
-      <div className="w-full lg:w-[40%] bg-[#140827] flex items-center justify-center px-8 xl:px-12 py-10 overflow-y-auto">
+      <div className="w-full lg:w-[40%] bg-[#140827] flex items-start justify-center px-8 xl:px-12 py-12 overflow-y-auto">
         <div className="w-full max-w-md">
 
           {/* TOMBOL KEMBALI */}
@@ -51,12 +53,12 @@ export default function RegisterPage() {
             ← Back to home
           </button>
 
-          {/* JUDUL UTAMA & FONT (Kembar Identik dengan Login) */}
-          <h1 className="text-4xl xl:text-5xl 2xl:text-6xl font-bold mb-4 tracking-tight">
+          <h1 className="text-4xl xl:text-5xl 2xl:text-6xl font-bold mb-4">
             Get started
           </h1>
+
           <p className="text-zinc-400 text-lg xl:text-xl mb-12">
-            Create your ANCER account to explore transit intelligence
+            Create your account to access ANCER
           </p>
 
           {/* NOTIFIKASI ERROR */}
