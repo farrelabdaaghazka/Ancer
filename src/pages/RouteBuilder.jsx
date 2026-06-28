@@ -1,29 +1,40 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import TransitModeToggle from '../components/TransitToggle';
+import RouteCard from '../components/RouteCard';
+
 function CreatePlanView() {
   const [selectedModes, setSelectedModes] = useState(['MRT', 'KRL', 'TransJakarta']);
-
   const navigate = useNavigate(); 
+  const transitOptions = ['MRT', 'KRL', 'TransJakarta', 'LRT'];
 
   const toggleMode = (mode) => {
-    setSelectedModes((prevModes) => {
-      if (prevModes.includes(mode)) {
-        return prevModes.filter((m) => m !== mode);
-      } else {
-        return [...prevModes, mode];
-      }
-    });
+    setSelectedModes((prevModes) => 
+      prevModes.includes(mode) ? prevModes.filter((m) => m !== mode) : [...prevModes, mode]
+    );
   };
 
-  const transitOptions = ['MRT', 'KRL', 'TransJakarta', 'LRT'];
+  const fastestRouteData = [
+    { station: "Gambir", dotClass: "bg-[#834DFB]", transit: { name: "KRL Commuter Line", badgeClass: "text-[#b490f5] bg-[#834DFB]/20 border border-[#834DFB]/20", duration: "12 min" } },
+    { station: "Manggarai", dotClass: "bg-[#1a1625] border-2 border-[#834DFB]", transit: { name: "MRT Jakarta", badgeClass: "text-[#b490f5] bg-[#834DFB]/20 border border-[#834DFB]/20", duration: "18 min" } },
+    { station: "Blok M", dotClass: "bg-[#1a1625] border-2 border-yellow-500", transit: { name: "TransJakarta C1", badgeClass: "text-yellow-500 bg-yellow-500/10 border border-yellow-500/20", duration: "17 min" } },
+    { station: "Lebak Bulus", dotClass: "bg-yellow-500", transit: null }
+  ];
+
+  const cheapestRouteData = [
+    { station: "Gambir", dotClass: "bg-yellow-400", transit: { name: "TransJakarta 1A", badgeClass: "text-yellow-500 bg-yellow-500/10 border border-yellow-500/20", duration: "14 min" } },
+    { station: "Harmoni", dotClass: "bg-[#1a1625] border-2 border-yellow-400", transit: { name: "TransJakarta 8", badgeClass: "text-yellow-500 bg-yellow-500/10 border border-yellow-500/20", duration: "22 min" } },
+    { station: "Grogol", dotClass: "bg-[#1a1625] border-2 border-yellow-400", transit: { name: "TransJakarta 8A", badgeClass: "text-yellow-500 bg-yellow-500/10 border border-yellow-500/20", duration: "32 min" } },
+    { station: "Lebak Bulus", dotClass: "bg-yellow-400", transit: null }
+  ];
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full h-auto pb-10">
-      {/* Panel Form Input */}
+      
       <div className="bg-[#1a1625] border border-white/5 rounded-2xl p-6 flex flex-col h-auto">
         <div className="space-y-5 flex-grow">
-          {/* Origin Hub */}
+          
           <div className="space-y-2 text-left relative">
             <label className="text-[10px] font-black text-gray-400 tracking-wider uppercase">Origin Hub</label>
             <div className="relative">
@@ -42,7 +53,6 @@ function CreatePlanView() {
             </div>
           </div>
 
-          {/* Destination Point */}
           <div className="space-y-2 text-left pt-2">
             <label className="text-[10px] font-black text-gray-400 tracking-wider uppercase">Destination Point</label>
             <div className="relative">
@@ -55,7 +65,6 @@ function CreatePlanView() {
             </div>
           </div>
 
-          {/* Departure Date */}
           <div className="space-y-2 text-left">
             <label className="text-[10px] font-black text-gray-400 tracking-wider uppercase">Departure Date</label>
             <div className="relative">
@@ -74,38 +83,17 @@ function CreatePlanView() {
             </div>
           </div>
 
-          {/* Transit Modes Dinamis */}
           <div className="space-y-3 text-left pt-2">
             <label className="text-[10px] font-black text-gray-400 tracking-wider uppercase">Transit Modes</label>
             <div className="flex flex-wrap gap-3">
-              {transitOptions.map((mode) => {
-                const isSelected = selectedModes.includes(mode);
-                
-                return (
-                  <div 
-                    key={mode} 
-                    onClick={() => toggleMode(mode)}
-                    className={`flex items-center gap-2.5 bg-[#110c1b] rounded-lg px-3.5 py-2.5 cursor-pointer transition-all duration-200 select-none border ${
-                      isSelected ? 'border-[#834DFB]' : 'border-transparent'
-                    }`}
-                  >
-                    <div className={`w-[14px] h-[14px] rounded-[3px] flex items-center justify-center transition-colors ${
-                      isSelected ? 'bg-[#834DFB]' : 'bg-white'
-                    }`}>
-                      {isSelected && (
-                        <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                      )}
-                    </div>
-                    <span className={`text-[12px] font-bold transition-colors ${
-                      isSelected ? 'text-white' : 'text-[#6b7280]'
-                    }`}>
-                      {mode}
-                    </span>
-                  </div>
-                );
-              })}
+              {transitOptions.map((mode) => (
+                <TransitModeToggle 
+                  key={mode}
+                  mode={mode}
+                  isSelected={selectedModes.includes(mode)}
+                  onClick={() => toggleMode(mode)}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -114,163 +102,30 @@ function CreatePlanView() {
         </button>
       </div>
 
-      {/* --- Fastest Route Card --- */}
-      <div className="bg-[#1a1625] border border-white/5 rounded-2xl p-6 flex flex-col h-auto text-left relative">
-        <div className="bg-[#834DFB] text-white text-[10px] font-bold px-3 py-1.5 rounded-full w-fit mb-4 flex items-center gap-1">
-          ⚡ Fastest Route
-        </div>
-        <div className="text-[40px] leading-none font-black text-white mb-1">47 min</div>
-        <p className="text-[11px] text-gray-500 font-medium mb-8">Estimated travel time</p>
-        
-        <div className="relative border-l border-white/10 ml-[7px] pl-6 space-y-6 flex-grow">
-          <div className="relative">
-            <div className="absolute -left-[30.5px] top-1 w-[13px] h-[13px] bg-[#834DFB] rounded-full" />
-            <div className="text-[13px] font-bold text-white mb-2 leading-none mt-1">Gambir</div>
-            <div className="flex items-center gap-3">
-              <span className="text-[9px] font-bold text-[#b490f5] bg-[#834DFB]/20 border border-[#834DFB]/20 px-2 py-1 rounded">KRL Commuter Line</span>
-              <span className="text-[10px] text-gray-500 flex items-center gap-1">
-                <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                12 min
-              </span>
-            </div>
-          </div>
-          <div className="relative">
-            <div className="absolute -left-[30.5px] top-1 w-[13px] h-[13px] bg-[#1a1625] border-2 border-[#834DFB] rounded-full" />
-            <div className="text-[13px] font-bold text-white mb-2 leading-none mt-1">Manggarai</div>
-            <div className="flex items-center gap-3">
-              <span className="text-[9px] font-bold text-[#b490f5] bg-[#834DFB]/20 border border-[#834DFB]/20 px-2 py-1 rounded">MRT Jakarta</span>
-              <span className="text-[10px] text-gray-500 flex items-center gap-1">
-                 <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                 18 min
-              </span>
-            </div>
-          </div>
-          <div className="relative">
-            <div className="absolute -left-[30.5px] top-1 w-[13px] h-[13px] bg-[#1a1625] border-2 border-yellow-500 rounded-full" />
-            <div className="text-[13px] font-bold text-white mb-2 leading-none mt-1">Blok M</div>
-            <div className="flex items-center gap-3">
-              <span className="text-[9px] font-bold text-yellow-500 bg-yellow-500/10 border border-yellow-500/20 px-2 py-1 rounded">TransJakarta C1</span>
-              <span className="text-[10px] text-gray-500 flex items-center gap-1">
-                 <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                 17 min
-              </span>
-            </div>
-          </div>
-          <div className="relative">
-            <div className="absolute -left-[30.5px] top-1 w-[13px] h-[13px] bg-yellow-500 rounded-full" />
-            <div className="text-[13px] font-bold text-white leading-none mt-1">Lebak Bulus</div>
-          </div>
-        </div>
+      <RouteCard 
+        badgeText="⚡ Fastest Route"
+        badgeClass="bg-[#834DFB] text-white"
+        cardBorderClass="border-white/5"
+        time="47 min"
+        fare="Rp23.500"
+        fareColorClass="text-white"
+        radarIconClass="text-[#834DFB]"
+        steps={fastestRouteData}
+        onRadarClick={() => navigate('/radar')}
+      />
 
-        {/* --- Area Footer dengan Penambahan Tombol Live Radar --- */}
-        <div className="mt-8 pt-6 border-t border-white/5">
-          <div className="mb-4">
-            <div className="text-[10px] text-gray-500 font-medium mb-1">Total Fare</div>
-            <div className="text-[22px] font-black text-white leading-none">Rp23.500</div>
-          </div>
-          
-          <button className="w-full bg-[#834DFB] hover:bg-purple-600 text-white font-bold py-3.5 rounded-xl text-xs flex items-center justify-center gap-2 transition-colors">
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-            Save to Travel Calendar
-          </button>
-
-          {/* Pemisah OR */}
-          <div className="flex items-center gap-3 my-3">
-            <div className="flex-1 h-px bg-white/5"></div>
-            <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest">OR</span>
-            <div className="flex-1 h-px bg-white/5"></div>
-          </div>
-
-          {/* Tombol Live Radar */}
-          <button onClick={() => navigate('/radar')} className="w-full bg-transparent border border-white/10 hover:bg-white/5 text-white font-bold py-3.5 rounded-xl text-xs flex items-center justify-center gap-2 transition-colors">
-            <svg className="w-4 h-4 text-[#834DFB]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <circle cx="12" cy="12" r="6"></circle>
-              <circle cx="12" cy="12" r="2"></circle>
-            </svg>
-            View on Live Radar
-          </button>
-        </div>
-      </div>
-
-      {/* --- Cheapest Route Card --- */}
-      <div className="bg-[#1a1625] border border-yellow-500/50 rounded-2xl p-6 flex flex-col h-auto text-left relative">
-        <div className="bg-yellow-400 text-black text-[10px] font-bold px-3 py-1.5 rounded-full w-fit mb-4 flex items-center gap-1">
-          💰 Cheapest Route
-        </div>
-        <div className="text-[40px] leading-none font-black text-white mb-1">68 min</div>
-        <p className="text-[11px] text-gray-500 font-medium mb-8">Estimated travel time</p>
-        
-        <div className="relative border-l border-white/10 ml-[7px] pl-6 space-y-6 flex-grow">
-          <div className="relative">
-             <div className="absolute -left-[30.5px] top-1 w-[13px] h-[13px] bg-yellow-400 rounded-full" />
-             <div className="text-[13px] font-bold text-white mb-2 leading-none mt-1">Gambir</div>
-             <div className="flex items-center gap-3">
-               <span className="text-[9px] font-bold text-yellow-500 bg-yellow-500/10 border border-yellow-500/20 px-2 py-1 rounded">TransJakarta 1A</span>
-               <span className="text-[10px] text-gray-500 flex items-center gap-1">
-                 <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                 14 min
-               </span>
-             </div>
-          </div>
-          <div className="relative">
-             <div className="absolute -left-[30.5px] top-1 w-[13px] h-[13px] bg-[#1a1625] border-2 border-yellow-400 rounded-full" />
-             <div className="text-[13px] font-bold text-white mb-2 leading-none mt-1">Harmoni</div>
-             <div className="flex items-center gap-3">
-               <span className="text-[9px] font-bold text-yellow-500 bg-yellow-500/10 border border-yellow-500/20 px-2 py-1 rounded">TransJakarta 8</span>
-               <span className="text-[10px] text-gray-500 flex items-center gap-1">
-                 <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                 22 min
-               </span>
-             </div>
-          </div>
-          <div className="relative">
-             <div className="absolute -left-[30.5px] top-1 w-[13px] h-[13px] bg-[#1a1625] border-2 border-yellow-400 rounded-full" />
-             <div className="text-[13px] font-bold text-white mb-2 leading-none mt-1">Grogol</div>
-             <div className="flex items-center gap-3">
-               <span className="text-[9px] font-bold text-yellow-500 bg-yellow-500/10 border border-yellow-500/20 px-2 py-1 rounded">TransJakarta 8A</span>
-               <span className="text-[10px] text-gray-500 flex items-center gap-1">
-                 <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                 32 min
-               </span>
-             </div>
-          </div>
-          <div className="relative">
-             <div className="absolute -left-[30.5px] top-1 w-[13px] h-[13px] bg-yellow-400 rounded-full" />
-             <div className="text-[13px] font-bold text-white leading-none mt-1">Lebak Bulus</div>
-          </div>
-        </div>
-
-        {/* --- Area Footer dengan Penambahan Tombol Live Radar --- */}
-        <div className="mt-8 pt-6 border-t border-white/5">
-          <div className="mb-4">
-            <div className="text-[10px] text-gray-500 font-medium mb-1">Total Fare</div>
-            <div className="text-[22px] font-black text-yellow-400 leading-none">Rp9.000</div>
-          </div>
-          
-          <button className="w-full bg-[#834DFB] hover:bg-purple-600 text-white font-bold py-3.5 rounded-xl text-xs flex items-center justify-center gap-2 transition-colors">
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-            Save to Travel Calendar
-          </button>
-
-          {/* Pemisah OR */}
-          <div className="flex items-center gap-3 my-3">
-            <div className="flex-1 h-px bg-white/5"></div>
-            <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest">OR</span>
-            <div className="flex-1 h-px bg-white/5"></div>
-          </div>
-
-          {/* Tombol Live Radar */}
-          <button onClick={() => navigate('/radar')} className="w-full bg-transparent border border-white/10 hover:bg-white/5 text-white font-bold py-3.5 rounded-xl text-xs flex items-center justify-center gap-2 transition-colors">
-            <svg className="w-4 h-4 text-yellow-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <circle cx="12" cy="12" r="6"></circle>
-              <circle cx="12" cy="12" r="2"></circle>
-            </svg>
-            View on Live Radar
-          </button>
-        </div>
-      </div>
+      <RouteCard 
+        badgeText="💰 Cheapest Route"
+        badgeClass="bg-yellow-400 text-black"
+        cardBorderClass="border-yellow-500/50"
+        time="68 min"
+        fare="Rp9.000"
+        fareColorClass="text-yellow-400"
+        radarIconClass="text-yellow-500"
+        steps={cheapestRouteData}
+        onRadarClick={() => navigate('/radar')}
+      />
+      
     </div>
   );
 }
@@ -279,12 +134,10 @@ function ScheduleView() {
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   return (
     <div className="bg-[#1a1625] border border-white/5 rounded-2xl p-6 h-auto min-h-full text-left mb-10">
-      {/* Header tanpa tombol Create Schedule */}
       <div className="mb-8">
         <h3 className="text-lg font-black text-white">June 2026</h3>
       </div>
       
-      {/* Label Hari */}
       <div className="grid grid-cols-7 gap-2 mb-2">
         {days.map(d => (
           <div key={d} className="text-[10px] font-black text-gray-500 uppercase text-center">
@@ -293,7 +146,6 @@ function ScheduleView() {
         ))}
       </div>
       
-      {/* Grid Kalender */}
       <div className="grid grid-cols-7 gap-2">
         {[...Array(30)].map((_, i) => (
           <div key={i} className="h-28 bg-[#110c1b] border border-white/5 rounded-xl p-3 text-xs font-bold text-gray-500 hover:border-[#834DFB] transition-all cursor-pointer">
