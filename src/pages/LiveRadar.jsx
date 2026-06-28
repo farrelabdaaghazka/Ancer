@@ -1,8 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Navigation, X, AlertTriangle } from "lucide-react";
+import { Navigation } from "lucide-react";
 import { ROUTING_SCHEMA, DEFAULT_CENTER, DEFAULT_ZOOM } from "../data/radarData";
+import RadarHeader from "../components/RadarHeader";
+import AlertBanner from "../components/AlertBanner";
+import TransitLinesLegend from "../components/TransitLinesLegend";
+import ModaSelector from "../components/ModaSelector";
 import SearchOverlay from "../components/SearchOverlay";
 import ActiveNavPanel from "../components/ActiveNavPanel";
 import TransitTimeline from "../components/TransitTimeline";
@@ -155,26 +159,7 @@ export default function LiveRadar() {
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #834DFB; }
       `}</style>
 
-      <div className="flex justify-between items-start mb-4 md:mb-6 shrink-0 z-10">
-        <div>
-          <div className="text-[#834DFB] text-[10px] md:text-[11px] font-bold tracking-[2px] mb-1 uppercase">Module B</div>
-          <h1 className="text-2xl md:text-3xl font-black text-[#F5F3FF] tracking-tight">Live Radar</h1>
-        </div>
-        <div className="flex gap-1 bg-[#1e1235] border border-white/5 rounded-xl p-1 relative z-30 shadow-md">
-          <button 
-            onClick={() => setRadarState("search")}
-            className={`px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-[11px] md:text-xs font-bold transition-all cursor-pointer ${radarState === "search" ? "bg-[#834DFB] text-white shadow-sm" : "text-gray-400 hover:text-white"}`}
-          >
-            Map View
-          </button>
-          <button 
-            onClick={() => setRadarState("active")}
-            className={`px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-[11px] md:text-xs font-bold transition-all cursor-pointer ${radarState === "active" ? "bg-[#834DFB] text-white shadow-sm" : "text-gray-400 hover:text-white"}`}
-          >
-            Navigation
-          </button>
-        </div>
-      </div>
+      <RadarHeader radarState={radarState} setRadarState={setRadarState} />
 
       <div className="flex-1 flex flex-col md:flex-row border border-white/5 bg-[#1a1625]/40 rounded-3xl overflow-hidden shadow-2xl relative">
         
@@ -205,58 +190,25 @@ export default function LiveRadar() {
             />
           )}
 
-          {radarState === "active" && showBanner && (
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 w-full max-w-xl px-4 z-[1000] animate-fadeIn">
-              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3 flex items-center gap-3 backdrop-blur-md shadow-lg">
-                <AlertTriangle size={15} className="text-[#F0E100] shrink-0" />
-                <span className="flex-1 text-[11px] md:text-xs font-bold text-gray-200 tracking-tight">{bannerText ?? data.delayMessage}</span>
-                {!rerouteApplied && (
-                  <button 
-                    onClick={handleReroute}
-                    className="bg-[#F0E100] text-[#110c1b] text-[9px] md:text-[10px] font-black px-2.5 py-1.5 rounded-lg hover:opacity-90 shrink-0 cursor-pointer"
-                  >
-                    Reroute
-                  </button>
-                )}
-                <X size={14} className="text-gray-500 hover:text-white cursor-pointer" onClick={() => setShowBanner(false)} />
-              </div>
-            </div>
+          {radarState === "active" && (
+            <AlertBanner 
+              showBanner={showBanner}
+              setShowBanner={setShowBanner}
+              bannerText={bannerText}
+              delayMessage={data.delayMessage}
+              rerouteApplied={rerouteApplied}
+              handleReroute={handleReroute}
+            />
           )}
 
           <div id="radar-leaflet-mount" className="w-full flex-1 z-0" />
 
           {radarState === "search" && (
-            <div className="absolute bottom-5 left-5 bg-[#110c1be6] border border-white/5 rounded-xl p-4 backdrop-blur-md z-[1000] space-y-2.5 text-left shadow-lg hidden lg:block">
-              <div className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-1">TRANSIT LINES</div>
-              {Object.keys(ROUTING_SCHEMA).map(key => (
-                <div key={key} className={`flex items-center gap-3 transition-opacity ${scenario === key ? "opacity-100" : "opacity-35"}`}>
-                  <div style={{ background: ROUTING_SCHEMA[key].lineColor }} className="w-4 h-[3px] rounded-full shadow-sm" />
-                  <span className="text-xs font-bold text-gray-300">{ROUTING_SCHEMA[key].transitType}</span>
-                </div>
-              ))}
-            </div>
+            <TransitLinesLegend schema={ROUTING_SCHEMA} currentScenario={scenario} />
           )}
 
           {radarState === "search" && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-[#110c1be6] border border-white/15 rounded-2xl p-1.5 backdrop-blur-md z-[1000] flex gap-1 shadow-xl max-w-[90%] overflow-x-auto">
-              {Object.keys(ROUTING_SCHEMA).map((key) => {
-                const isSelected = scenario === key;
-                return (
-                  <button
-                    key={key}
-                    onClick={() => setScenario(key)}
-                    style={{
-                      borderColor: isSelected ? ROUTING_SCHEMA[key].lineColor : "transparent",
-                      color: isSelected ? ROUTING_SCHEMA[key].lineColor : "#6b7280",
-                      background: isSelected ? `${ROUTING_SCHEMA[key].lineColor}15` : "transparent"
-                    }}
-                    className="px-3 md:px-4 py-1.5 md:py-2 rounded-xl text-[11px] md:text-xs font-black border transition-all cursor-pointer whitespace-nowrap"
-                  >
-                    {ROUTING_SCHEMA[key].label}
-                  </button>
-                );
-              })}
-            </div>
+            <ModaSelector schema={ROUTING_SCHEMA} scenario={scenario} setScenario={setScenario} />
           )}
 
           {radarState === "search" && (
