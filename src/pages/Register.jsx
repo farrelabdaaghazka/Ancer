@@ -42,13 +42,13 @@ export default function RegisterPage() {
       </div>
 
       {/* SEBELAH KANAN: Form Menu Registrasi */}
-      <div className="w-full lg:w-[40%] bg-[#140827] flex items-start justify-center px-8 xl:px-12 py-12 overflow-y-auto">
+      <div className="w-full lg:w-[40%] bg-[#140827] flex items-start justify-center px-8 xl:px-12 py-10 overflow-y-auto">
         <div className="w-full max-w-md">
 
           {/* TOMBOL KEMBALI */}
           <button
             onClick={() => navigate("/")}
-            className="text-zinc-500 hover:text-white transition mb-6 text-left text-sm font-medium"
+            className="text-zinc-500 hover:text-white transition mb-12 text-left"
           >
             ← Back to home
           </button>
@@ -69,11 +69,11 @@ export default function RegisterPage() {
           )}
 
           {/* FORM PENDAFTARAN */}
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} class="space-y-8">
             
             {/* INPUT NAMA LENGKAP */}
             <div>
-              <label className="block uppercase tracking-wider text-zinc-300 font-semibold mb-2 text-xs">
+              <label className="block uppercase tracking-wider text-zinc-300 font-semibold mb-4">
                 Full Name
               </label>
               <input
@@ -82,13 +82,21 @@ export default function RegisterPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="John Doe"
-                className="w-full bg-[#24113F] border border-white/10 rounded-3xl px-6 py-3.5 text-base outline-none focus:ring-2 focus:ring-violet-500 transition-all duration-200 text-white placeholder-zinc-600"
+                className="w-full
+                            bg-[#24113F]
+                            border border-white/10
+                            rounded-3xl
+                            px-6 py-5
+                            text-lg
+                            outline-none
+                            focus:ring-2
+                            focus:ring-violet-500"
               />
             </div>
 
             {/* INPUT EMAIL */}
             <div>
-              <label className="block uppercase tracking-wider text-zinc-300 font-semibold mb-2 text-xs">
+              <label className="block uppercase tracking-wider text-zinc-300 font-semibold mb-4">
                 Email Address
               </label>
               <input
@@ -97,13 +105,21 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="commuter@example.com"
-                className="w-full bg-[#24113F] border border-white/10 rounded-3xl px-6 py-3.5 text-base outline-none focus:ring-2 focus:ring-violet-500 transition-all duration-200 text-white placeholder-zinc-600"
+                className="w-full
+                            bg-[#24113F]
+                            border border-white/10
+                            rounded-3xl
+                            px-6 py-5
+                            text-lg
+                            outline-none
+                            focus:ring-2
+                            focus:ring-violet-500"
               />
             </div>
 
             {/* INPUT PASSWORD */}
             <div>
-              <label className="block uppercase tracking-wider text-zinc-300 font-semibold mb-2 text-xs">
+              <label className="block uppercase tracking-wider text-zinc-300 font-semibold mb-4">
                 Password
               </label>
               <div className="relative">
@@ -113,7 +129,15 @@ export default function RegisterPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••"
-                  className="w-full bg-[#24113F] border border-white/10 rounded-3xl px-6 py-3.5 text-base outline-none focus:ring-2 focus:ring-violet-500 transition-all duration-200 text-white placeholder-zinc-600 pr-14"
+                  className="w-full
+                            bg-[#24113F]
+                            border border-white/10
+                            rounded-3xl
+                            px-6 py-5
+                            text-lg
+                            outline-none
+                            focus:ring-2
+                            focus:ring-violet-500"
                 />
                 <button
                   type="button"
@@ -139,7 +163,7 @@ export default function RegisterPage() {
 
             {/* MASUKKAN KONFIRMASI PASSWORD */}
             <div>
-              <label className="block uppercase tracking-wider text-zinc-300 font-semibold mb-2 text-xs">
+              <label className="block uppercase tracking-wider text-zinc-300 font-semibold mb-4">
                 Confirm Password
               </label>
               <div className="relative">
@@ -149,18 +173,26 @@ export default function RegisterPage() {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••••"
-                  className="w-full bg-[#24113F] border border-white/10 rounded-3xl px-6 py-3.5 text-base outline-none focus:ring-2 focus:ring-violet-500 transition-all duration-200 text-white placeholder-zinc-600"
+                  className="w-full
+                            bg-[#24113F]
+                            border border-white/10
+                            rounded-3xl
+                            px-6 py-5
+                            text-lg
+                            outline-none
+                            focus:ring-2
+                            focus:ring-violet-500"
                 />
               </div>
             </div>
 
             {/* PERSETUJUAN LAYANAN */}
             <div className="flex items-start gap-3 pt-1">
-              <label className="flex items-center gap-3 text-zinc-400 cursor-pointer select-none text-xs leading-relaxed">
+              <label className="flex items-center gap-3 text-zinc-400 cursor-pointer select-none">
                 <input
                   type="checkbox"
                   required
-                  className="w-4 h-4 rounded mt-0.5 accent-violet-600"
+                  className="w-5 h-5 rounded mt-0.5 accent-violet-600"
                 />
                 I agree to the Terms of Service and Privacy Policy
               </label>
@@ -176,11 +208,11 @@ export default function RegisterPage() {
           </form>
 
           {/* LINK KE LOGIN */}
-          <p className="text-center text-zinc-400 text-sm mt-6">
+          <p className="text-center text-zinc-400 mt-10">
             Already have an account?
             <button
               onClick={() => navigate("/login")}
-              className="text-violet-400 font-semibold ml-1 hover:underline focus:outline-none"
+              className="text-violet-400 font-semibold ml-1 hover:underline bg-transparent border-none cursor-pointer"
             >
               Sign In
             </button>
