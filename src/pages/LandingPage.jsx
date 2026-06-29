@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router";
 import { landingContent } from "../data/landingData";
 
 import Navbar from "../components/Navbar";
@@ -141,6 +141,7 @@ export default function LandingPage() {
               <h2 className="text-2xl md:text-4xl font-black tracking-tight mb-3 leading-tight">{currentContent.ctaTitle}</h2>
               <p className="text-white/80 text-sm font-medium leading-relaxed">{currentContent.ctaSub}</p>
             </div>
+            {/* FIX: Link sekarang sudah aman didefinisikan dan siap dieksekusi */}
             <Link to="/login" className="bg-white text-[#834DFB] hover:bg-[#FAFAFA] font-black text-sm px-8 py-4 rounded-xl shadow-lg transition-all shrink-0">
               {currentContent.ctaBtn}
             </Link>

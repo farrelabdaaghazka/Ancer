@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router";
 import LandingPage from "./pages/LandingPage";
 import LiveRadar from "./pages/LiveRadar";
 import MobilityLedger from "./pages/MobilityLedger";

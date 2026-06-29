@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router";
 
 import TransitModeToggle from '../components/TransitToggle';
 import RouteCard from '../components/RouteCard';

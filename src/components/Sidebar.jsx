@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link } from "react-router";
 import { 
   Menu, 
   ChevronLeft, 
@@ -67,6 +67,7 @@ export default function Sidebar() {
             >
               <Icon size={18} className="shrink-0" />
               {!isCollapsed && <span className="whitespace-nowrap">{item.label}</span>}
+              
               {isCollapsed && (
                 <div className="absolute left-16 bg-[#110c1b] text-white text-xs font-bold px-3 py-2 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity border border-white/5 whitespace-nowrap z-50 shadow-xl">
                   {item.label}
