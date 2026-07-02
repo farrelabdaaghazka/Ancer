@@ -15,20 +15,15 @@ export default function RegisterPage() {
     e.preventDefault();
     setError("");
 
-    // Validasi kecocokan password
     if (password !== confirmPassword) {
       setError("Password dan konfirmasi password tidak cocok!");
       return;
     }
 
-    // Objek data user yang didaftarkan
     const userData = { name, email, password };
-
-    // Log notifikasi sistem biasa di konsol
     console.log("Registration data captured:");
     console.dir(userData); 
 
-    // Simulasi sukses dan arahkan ke halaman login
     setTimeout(() => {
       navigate("/login");
     }, 1000);
@@ -36,16 +31,15 @@ export default function RegisterPage() {
 
   return (
     <div className="h-screen w-full flex flex-col lg:flex-row text-white bg-[#0C051F] overflow-hidden">
-      {/* SEBELAH KIRI: Komponen Side */}
+      {/* SEBELAH KIRI */}
       <div className="w-full lg:w-[60%] h-full hidden lg:block">
         <AuthLayoutSide />
       </div>
 
-      {/* SEBELAH KANAN: Form Menu Registrasi */}
+      {/* SEBELAH KANAN */}
       <div className="w-full lg:w-[40%] bg-[#140827] flex items-start justify-center px-8 xl:px-12 py-10 overflow-y-auto">
         <div className="w-full max-w-md">
 
-          {/* TOMBOL KEMBALI */}
           <button
             onClick={() => navigate("/")}
             className="text-zinc-500 hover:text-white transition mb-12 text-left"
@@ -61,17 +55,14 @@ export default function RegisterPage() {
             Create your account to access ANCER
           </p>
 
-          {/* NOTIFIKASI ERROR */}
           {error && (
             <div className="p-4 mb-4 text-sm text-red-400 bg-red-950/40 border border-red-500/30 rounded-2xl animate-fade-in">
               ⚠️ {error}
             </div>
           )}
 
-          {/* FORM PENDAFTARAN */}
           <form onSubmit={handleSubmit} class="space-y-8">
             
-            {/* INPUT NAMA LENGKAP */}
             <div>
               <label className="block uppercase tracking-wider text-zinc-300 font-semibold mb-4">
                 Full Name
@@ -94,7 +85,6 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* INPUT EMAIL */}
             <div>
               <label className="block uppercase tracking-wider text-zinc-300 font-semibold mb-4">
                 Email Address
@@ -117,7 +107,6 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* INPUT PASSWORD */}
             <div>
               <label className="block uppercase tracking-wider text-zinc-300 font-semibold mb-4">
                 Password
@@ -161,7 +150,6 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* MASUKKAN KONFIRMASI PASSWORD */}
             <div>
               <label className="block uppercase tracking-wider text-zinc-300 font-semibold mb-4">
                 Confirm Password
@@ -186,7 +174,6 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* PERSETUJUAN LAYANAN */}
             <div className="flex items-start gap-3 pt-1">
               <label className="flex items-center gap-3 text-zinc-400 cursor-pointer select-none">
                 <input
@@ -198,16 +185,11 @@ export default function RegisterPage() {
               </label>
             </div>
 
-            {/* TOMBOL UTAMA (Sama Persis dengan Tombol Sign In Login) */}
-            <button
-              type="submit"
-              className="w-full py-5 rounded-3xl font-bold text-lg text-white bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 hover:opacity-95 hover:scale-[1.01] transition-all duration-200 shadow-lg shadow-purple-500/30 mt-2"
-            >
+            <button type="submit" className="w-full py-5 rounded-3xl font-bold text-lg bg-gradient-to-r from-[#7C3AED] to-[#A855F7] hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-violet-500/20">
               Register →
             </button>
           </form>
 
-          {/* LINK KE LOGIN */}
           <p className="text-center text-zinc-400 mt-10">
             Already have an account?
             <button
