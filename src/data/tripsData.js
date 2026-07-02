@@ -7,3 +7,11 @@ export const initialTrips = [
   { day: 'Sat 06', route: 'Tanah Abang → Sudirman', mode: 'KRL', fare: 5000 },
   { day: 'Sun 07', route: 'Dukuh Atas → Blok M', mode: 'MRT', fare: 14000 },
 ];
+
+export const formatRupiah = (number) => {
+  return new Intl.NumberFormat('id-ID', { 
+    style: 'currency', 
+    currency: 'IDR', 
+    maximumFractionDigits: 0 
+  }).format(number);
+};
