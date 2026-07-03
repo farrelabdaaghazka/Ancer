@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import ancerLogo from "../assets/logo/ancer logo.png";
 
 export default function LandingFooter({ currentContent, emailInput, setEmailInput, scrollToSection }) {

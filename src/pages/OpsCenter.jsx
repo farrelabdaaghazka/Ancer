@@ -1,5 +1,4 @@
 import React from 'react';
-import { cardOpsData } from '../data/CardOpsData';
 import { useNavigate } from 'react-router-dom';
 
 // Import komponen yang sudah dipisah
