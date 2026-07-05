@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 // Import komponen yang sudah dipisah
 import KpiCard from '../components/CardOps';
