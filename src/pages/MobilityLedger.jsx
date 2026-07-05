@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// Import semua data awal dari folder data
 import { initialTrips } from '../data/tripsData'; 
 import { cardOpsData as initialCardOps } from '../data/CardOpsData';
 import { chartDistribution as initialChartDist } from '../data/chartData';
